@@ -15,6 +15,7 @@
   
   & #blog {
     width: 60%;
+    min-width: 200px;
   }
 
   & #links {

@@ -1,0 +1,15 @@
+.blog_post {
+	border-radius: 25px;
+	background-color: #131b13;
+	padding: 10px;
+	box-sizing: border-box;
+	margin: 1rem 0rem;
+
+	& .blog_title {
+		margin: 0px;
+	}
+
+	& .blog_date {
+		margin: 0px;
+	}
+}

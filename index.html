@@ -16,6 +16,13 @@
     <div class="content">
       <div id="blog" class="column">
         <h3>Blog</h3>
+        <div id="blog_app">
+          <blog-post
+            v-for="post in posts1"
+            :post="post"
+            :key="post.id"
+            ></blog-post>
+        </div>
       </div>
       <div id="links" class="column">
         <h3>Other Pages</h3>
@@ -24,5 +31,6 @@
       </div>
     </div>
     <script type="module" src="/src/ts/main.ts"></script>
+    <script type="module" src="/src/ts/blogPreview.ts"></script>
   </body>
 </html>
