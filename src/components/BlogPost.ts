@@ -3,12 +3,16 @@
 // A class to hold all the data for a post
 export class Post {
 	publish_time: Date;
+	category: String;
 	title: String;
+	blurb: String;
 	content: String;
 
-	constructor(publish_time: Date, title: String, content: String) {
+	constructor(publish_time: Date, category: String, title: String, blurb: String, content: String) {
 		this.publish_time = publish_time;
+		this.category = category;
 		this.title = title;
+		this.blurb = blurb;
 		this.content = content;
 	}
 
@@ -27,6 +31,6 @@ export default {
 				<h3 class="blog_title">{{ post.title }}</h3>
 				<h6 class="blog_date">{{ post.getPublishDate() }}</h6>
 			</div>
-			<p class="blog_content">{{ post.content }}</p>
+			<p class="blog_content">{{ post.blurb }}</p>
 		</div>`
 }
