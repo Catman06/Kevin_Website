@@ -4,6 +4,7 @@
   display: flex;
   justify-content: space-around;
   text-align: center;
+  height: calc(100vh - var(--nav_height) - 5px);
 
   & .column {
     box-sizing: border-box;
@@ -11,11 +12,19 @@
     border-radius: 1rem;
     margin-top: 5px;
     padding: 5px;
+
+    & > h2 {
+      font-size: 1.25rem;
+      margin: .75rem;
+    }
   }
   
   & #blog {
     width: 60%;
     min-width: 200px;
+    & > h2 {
+      height: 1.25rem;
+    }
   }
 
   & #links {

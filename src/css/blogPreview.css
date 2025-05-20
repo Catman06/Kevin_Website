@@ -1,9 +1,16 @@
+#blog_app {
+	height: calc(100% - 2rem - 10px);
+	overflow-y: auto;
+	background-color: #3a493a;
+	border-radius: .78rem;
+	margin: 0;
+}
 .blog_post {
 	border-radius: 25px;
 	background-color: #131b13;
 	padding: 10px;
 	box-sizing: border-box;
-	margin: 1rem 0rem;
+	margin: .5rem .5rem;
 
 	& .blog_title {
 		margin: 0px;
@@ -11,5 +18,13 @@
 
 	& .blog_date {
 		margin: 0px;
+	}
+
+	& .blog_content {
+		max-height: 10.4em;
+		line-height: 1.3em;
+		padding: 0rem 1rem;
+		overflow: hidden;
+		text-align: justify;
 	}
 }
