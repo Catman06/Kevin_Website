@@ -28,7 +28,7 @@
     </div>
     <script type="module">
       import { createApp, ref } from 'vue/dist/vue.esm-bundler.js';
-      import BlogPreview from '/src/components/blogPreview.ts';
+      import BlogPreview from '/src/components/blogPreview.vue';
 
       const app = createApp({
         components: {
@@ -37,6 +37,5 @@
       }).mount("#blog")
     </script>
     <script type="module" src="/src/ts/main.ts"></script>
-    <script type="module" src="/src/components/blogPreview.ts"></script>
   </body>
 </html>

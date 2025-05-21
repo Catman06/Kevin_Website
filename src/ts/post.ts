@@ -1,12 +1,14 @@
 // A class to hold all the data for a post
 export class Post {
+	id: number;
 	publish_time: Date;
 	category: String;
 	title: String;
 	blurb: String;
 	content: DocumentFragment;
 
-	constructor(publish_time: String, category: String, title: String, blurb: String, content: DocumentFragment) {
+	constructor(id: number, publish_time: String, category: String, title: String, blurb: String, content: DocumentFragment) {
+		this.id = id;
 		this.publish_time = new Date(`${publish_time}`);
 		this.category = category;
 		this.title = title;
@@ -26,7 +28,6 @@ export async function loadPosts() {
 	try {
 		// Get the files in /posts/
 		const files = import.meta.glob(['/public/posts/*.html', '!**/EmptyPost.html']);
-		console.log(files);
 		for (const path in files) {
 			post_strings.push(await (await fetch(path, { method: "get" })).text());
 		}
@@ -85,13 +86,12 @@ export async function loadPosts() {
 			const body = post_document.getElementsByTagName("body")[0];
 			// const style = post_document.getElementsByTagName("style")[0];
 			content.appendChild(body);
-
 			// Apply all the gathered variables into a new Post and return it
-			post_posts.push(new Post(date, category, title, blurb, content));
+			post_posts.push(new Post(post_posts.length, date, category, title, blurb, content));
 		};
 	} catch (error) {
 		console.error('Error parsing HTML to Posts', error);
 	}
-	console.log(post_posts)
+	console.debug(post_posts)
 	return(post_posts);
 }
