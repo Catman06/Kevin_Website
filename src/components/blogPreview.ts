@@ -1,7 +1,7 @@
 import "../css/blogPreview.css";
-import { ref, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
-import { loadPosts } from "../ts/post.ts";
-import BlogPost from './BlogPost.ts';
+import { ref, onMounted } from 'vue/dist/vue.esm-bundler.js';
+import { loadPosts } from "../ts/post";
+import BlogPost from './BlogPreviewPost';
 
 export default {
 	components: {

@@ -66,7 +66,7 @@ body {
     min-width: var(--nav_height);
     overflow: hidden;
     & img {
-      height: var(--nav_height_logo);
+      height: calc(var(--nav_height) * .8);
     }
   }
 }

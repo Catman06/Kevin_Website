@@ -25,7 +25,8 @@ export async function loadPosts() {
 	// Load posts into post_strings
 	try {
 		// Get the files in /posts/
-		const files = import.meta.glob('../../public/posts/*.html', { query: "?raw" , import: "default" })
+		const files = import.meta.glob(['/public/posts/*.html', '!**/EmptyPost.html']);
+		console.log(files);
 		for (const path in files) {
 			post_strings.push(await (await fetch(path, { method: "get" })).text());
 		}
@@ -42,9 +43,9 @@ export async function loadPosts() {
 	let post_html_docs: Document[] = [];
 	try {
 		const parser = new DOMParser();
-		post_strings.forEach(html_string => {
+		for (const html_string of post_strings) {
 			post_html_docs.push(parser.parseFromString(html_string, "text/html"));
-		});
+		};
 	} catch (error) {
 		console.error('Error parsing Strings to HTML', error);
 	}
@@ -56,13 +57,12 @@ export async function loadPosts() {
 	// Turn the HTMLDocuments into Posts
 	let post_posts: Post[] = [];
 	try {
-		// For each provided Document
-		post_html_docs.forEach(post_document => {
+		// For each provided Document, add a Post to post_posts
+		for (const post_document of post_html_docs) {
 			const tag_list = post_document.getElementsByTagName("meta");
 			let date: String = '', category: String = '', title: String = '', blurb: String = '', content: DocumentFragment = new DocumentFragment;
 			// For each meta tag, get it's name and apply it's content to the corresponding variable
-			for (const index in tag_list) {
-				const tag = tag_list[index];
+			for (const tag of tag_list) {
 				switch (tag.name) {
 					case "date":
 						date = tag.content
@@ -83,12 +83,12 @@ export async function loadPosts() {
 
 			// Get the body and style of the content and put into a DocumentFragment
 			const body = post_document.getElementsByTagName("body")[0];
-			const style = post_document.getElementsByTagName("style")[0];
+			// const style = post_document.getElementsByTagName("style")[0];
 			content.appendChild(body);
 
 			// Apply all the gathered variables into a new Post and return it
 			post_posts.push(new Post(date, category, title, blurb, content));
-		});
+		};
 	} catch (error) {
 		console.error('Error parsing HTML to Posts', error);
 	}
