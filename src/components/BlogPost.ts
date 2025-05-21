@@ -1,25 +1,5 @@
+import { Post } from "../ts/post.ts";
 // A Web Component for a single instance of a blog post
-
-// A class to hold all the data for a post
-export class Post {
-	publish_time: Date;
-	category: String;
-	title: String;
-	blurb: String;
-	content: String;
-
-	constructor(publish_time: Date, category: String, title: String, blurb: String, content: String) {
-		this.publish_time = publish_time;
-		this.category = category;
-		this.title = title;
-		this.blurb = blurb;
-		this.content = content;
-	}
-
-	getPublishDate() {
-		return this.publish_time.toLocaleDateString();
-	}
-}
 
 export default {
 	props: {

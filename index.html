@@ -16,21 +16,25 @@
     <div class="content">
       <div id="blog" class="column">
         <h2>Blog</h2>
-        <div id="blog_app">
-          <blog-post
-            v-for="post in posts1"
-            :post="post"
-            :key="post.id"
-            ></blog-post>
-        </div>
+        <blog-preview />
       </div>
       <div id="links" class="column">
         <h2>Other Pages</h2>
-        <a href="/src/html/resume.html">Resume</a>
-        <a href="/src/html/blog.html">Blog</a>
+        <a href="/resume.html">Resume</a>
+        <a href="/blog.html">Blog</a>
       </div>
     </div>
+    <script type="module">
+      import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+      import BlogPreview from '/src/components/blogPreview.ts';
+
+      const app = createApp({
+        components: {
+          BlogPreview
+        }
+      }).mount("#blog")
+    </script>
     <script type="module" src="/src/ts/main.ts"></script>
-    <script type="module" src="/src/ts/blogPreview.ts"></script>
+    <script type="module" src="/src/components/blogPreview.ts"></script>
   </body>
 </html>
