@@ -7,10 +7,7 @@ const props = defineProps({
 })
 
 // Show header stuff only if a proper post is loaded
-const loaded = ref(true);
-if (props.post.category == "NoPost") {
-	loaded.value = false;
-}
+const loaded = ref(false);
 
 // Get the element for where the content should go
 let content_spot: HTMLElement | null;
@@ -24,13 +21,17 @@ document.adoptedStyleSheets.push(static_stylesheet);
 
 // When props.post changes, replace the old content and style with the new
 watch(() => props.post, (newpost, _oldpost) => {
+	if (props.post.category == "NoPost") {
+		loaded.value = false;
+	} else {
+		loaded.value = true;
+	}
 	if (!content_spot)
 		return
 	// Extract and place the post's content
 	content_spot.innerHTML = newpost.content.querySelectorAll("body")[0].innerHTML
 
 	// Replace stylesheets
-	console.log(newpost.stylesheet)
 	static_stylesheet.replaceSync(newpost.stylesheet);
 })
 
@@ -58,7 +59,8 @@ watch(() => props.post, (newpost, _oldpost) => {
 
 	text-align: center;
 	& #post_header {
-
+		margin-bottom: 1rem;
+		
 		& h1 {
 			display:block;
 			font-size: 2rem;
