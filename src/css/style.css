@@ -20,6 +20,12 @@
   --nav_logo: 39;
 }
 
+.clearfix::after {
+	content: '';
+	clear: both;
+	display:table;
+}
+
 body {
   margin: 0;
 }

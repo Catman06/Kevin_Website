@@ -18,12 +18,20 @@ onMounted(() => {
 	content_spot = document.getElementById("post_content");
 })
 
-// When props.post changes, replace the old content with the new
+// Create a stylesheet to apply the post's style to
+const static_stylesheet: CSSStyleSheet = new CSSStyleSheet;
+document.adoptedStyleSheets.push(static_stylesheet);
+
+// When props.post changes, replace the old content and style with the new
 watch(() => props.post, (newpost, _oldpost) => {
 	if (!content_spot)
 		return
 	// Extract and place the post's content
 	content_spot.innerHTML = newpost.content.querySelectorAll("body")[0].innerHTML
+
+	// Replace stylesheets
+	console.log(newpost.stylesheet)
+	static_stylesheet.replaceSync(newpost.stylesheet);
 })
 
 </script>
@@ -36,7 +44,7 @@ watch(() => props.post, (newpost, _oldpost) => {
 		<h2 id="post_category" v-if="loaded">{{ post.category }}</h2>
 	</div>
 	<p id="post_blurb">{{ post.blurb }}</p>
-	<div id="post_content"></div>
+	<div id="post_content" class="clearfix"></div>
 </div>
 </template>
 
@@ -72,7 +80,7 @@ watch(() => props.post, (newpost, _oldpost) => {
 
 	& #post_content {
 		text-align: justify;
+		height: fit-content;
 	}
 }
-
 </style>

@@ -2,13 +2,13 @@
 export class Post {
 	id: number;
 	publish_time: Date;
-	category: String;
-	title: String;
-	blurb: String;
+	category: string;
+	title: string;
+	blurb: string;
 	content: DocumentFragment;
-	stylesheet: CSSStyleSheet;
+	stylesheet: string;
 
-	constructor(id: number, publish_time: String, category: String, title: String, blurb: String, content: DocumentFragment, style: CSSStyleSheet) {
+	constructor(id: number, publish_time: string, category: string, title: string, blurb: string, content: DocumentFragment, style: string) {
 		this.id = id;
 		this.publish_time = new Date(`${publish_time}`);
 		this.category = category;
@@ -63,7 +63,7 @@ export async function loadPosts() {
 		// For each provided Document, add a Post to post_posts
 		for (const post_document of post_html_docs) {
 			const tag_list = post_document.getElementsByTagName("meta");
-			let date: String = '', category: String = '', title: String = '', blurb: String = '', content: DocumentFragment = new DocumentFragment;
+			let date: string = '', category: string = '', title: string = '', blurb: string = '', content: DocumentFragment = new DocumentFragment, stylesheet: string = '';
 			// For each meta tag, get it's name and apply it's content to the corresponding variable
 			for (const tag of tag_list) {
 				switch (tag.name) {
@@ -90,9 +90,9 @@ export async function loadPosts() {
 
 			// Get and store style data
 			const style = post_document.getElementsByTagName("style")[0];
-			let stylesheet = style.sheet;
+			stylesheet = style.innerHTML;
 			if (stylesheet === null) {
-				stylesheet = new CSSStyleSheet;
+				stylesheet = "";
 			}
 
 			// Apply all the gathered variables into a new Post and return it

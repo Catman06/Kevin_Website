@@ -6,8 +6,12 @@
 		<meta name="title" content="Making A New Website" />
 		<meta name="blurb" content="The first record of my creation of a new, blog focused, website." />
 		<style>
-			code {
-				background-color: darkgray;
+			.code_container {
+				background-color: rgba(124, 124, 124, 0.5);
+				float: left;
+				border-radius: 1rem;
+				margin: 10px;
+				padding: 10px;
 			}
 		</style>
 	</head>
@@ -35,6 +39,7 @@
 		<p>
 			The posts themselves are each an individual HTML file with custom meta tags that provide a
 			'Post' object with all it's needed data. Here is the base, unfilled HTML:
+			<div class="code_container">
 			<pre><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 	&lt;head&gt;
@@ -51,6 +56,7 @@
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
+			</div>
 			The HTML file can include both full HTML and CSS for display (Though no JavaScript).
 			When loaded, the file is parsed into a Post object that holds all the meta tags as strings,
 			the content as a DocumentFragment, and the style as a CSSStyleSheet.

@@ -6,7 +6,7 @@ import BlogPost from "./blogAppPost.vue";
 
 const getPosts = async () => loadPosts();
 const posts: Ref<Post[], any> = ref([]);
-const nopost = new Post(-1, "0", "NoPost", "Select a post", "", new DocumentFragment, new CSSStyleSheet)
+const nopost = new Post(-1, "0", "NoPost", "Select a post", "", new DocumentFragment, "")
 const selected_post: Ref<Post, any> = ref(nopost);
 
 function getPost(id: number) {
@@ -40,14 +40,19 @@ onMounted(async () => {
 
 <style lang="css">
 #post_selector {
+	width: 100%;
 	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	overflow-x: scroll;
 
 	&>* {
 		max-height: 8rem;
 	}
 
-	& more_button {
-		width: 4rem;
+	& .more_button {
+		width: 3rem;
+		height: 3.5rem;
 	}
 
 }
