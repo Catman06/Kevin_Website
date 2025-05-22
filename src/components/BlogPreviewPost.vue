@@ -5,12 +5,38 @@ const props = defineProps({
 	post: { type: Post, required: true }
 })
 </script>
+
 <template>
-<div class="blog_post">
+<div class="post_preview">
 	<div>
-		<h3 class="blog_title">{{ post.title }}</h3>
-		<h6 class="blog_date">{{ post.getPublishDate() }}</h6>
+		<h3 class="preview_title">{{ post.title }}</h3>
+		<h6 class="preview_date">{{ post.getPublishDate() }}</h6>
 	</div>
-	<p class="blog_content">{{ post.blurb }}</p>
+	<p class="preview_blurb">{{ post.blurb }}</p>
 </div>	
 </template>
+
+<style>
+.post_preview {
+	border-radius: 25px;
+	background-color: #131b13;
+	padding: 10px;
+	margin: .5rem .5rem;
+
+	& .preview_title {
+		margin: 0px;
+	}
+
+	& .preview_date {
+		margin: 0px;
+	}
+
+	& .preview_content {
+		max-height: 10.4em;
+		line-height: 1.3em;
+		padding: 0rem 1rem;
+		overflow: hidden;
+		text-align: justify;
+	}
+}
+</style>

@@ -6,14 +6,16 @@ export class Post {
 	title: String;
 	blurb: String;
 	content: DocumentFragment;
+	stylesheet: CSSStyleSheet;
 
-	constructor(id: number, publish_time: String, category: String, title: String, blurb: String, content: DocumentFragment) {
+	constructor(id: number, publish_time: String, category: String, title: String, blurb: String, content: DocumentFragment, style: CSSStyleSheet) {
 		this.id = id;
 		this.publish_time = new Date(`${publish_time}`);
 		this.category = category;
 		this.title = title;
 		this.blurb = blurb;
 		this.content = content;
+		this.stylesheet = style;
 	}
 
 	getPublishDate() {
@@ -82,12 +84,20 @@ export async function loadPosts() {
 				}
 			}
 
-			// Get the body and style of the content and put into a DocumentFragment
+			// Get the body of the content and put into a DocumentFragment
 			const body = post_document.getElementsByTagName("body")[0];
-			// const style = post_document.getElementsByTagName("style")[0];
 			content.appendChild(body);
+
+			// Get and store style data
+			const style = post_document.getElementsByTagName("style")[0];
+			let stylesheet = style.sheet;
+			if (stylesheet === null) {
+				stylesheet = new CSSStyleSheet;
+			}
+
 			// Apply all the gathered variables into a new Post and return it
-			post_posts.push(new Post(post_posts.length, date, category, title, blurb, content));
+			post_posts.push(new Post(post_posts.length, date, category, title, blurb, content, stylesheet));
+
 		};
 	} catch (error) {
 		console.error('Error parsing HTML to Posts', error);
