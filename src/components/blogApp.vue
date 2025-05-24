@@ -6,16 +6,27 @@ import BlogPost from "./blogAppPost.vue";
 
 const getPosts = async () => loadPosts();
 const posts: Ref<Post[], any> = ref([]);
-const nopost = new Post(-1, "0", "NoPost", "Select a post", "", new DocumentFragment, "")
+const nopost = new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, "")
 const selected_post: Ref<Post, any> = ref(nopost);
 
-function getPost(id: number) {
+function getPost(id: string) {
 	for (const post of posts.value) {
-		if (post.id == id) {
+		if (post.url_name == id) {
 			return post;
 		}
 	}
 	return nopost;
+}
+
+// Handle selecting a post and updating the URL
+function selectPost(id: string) {
+	for (const post of posts.value) {
+		if (post.url_name == id) {
+			selected_post.value = post
+			let currenturl = window.location.origin + window.location.pathname;
+			window.history.pushState({ currentPost: post.title }, '', `${currenturl}#${post.url_name}`)
+		}
+	}
 }
 
 onMounted(async () => {
@@ -30,7 +41,7 @@ onMounted(async () => {
 <template>
 	<div id="post_selector">
 		<button class="more_button" id="selector_left">&#9664</button>
-		<blog-preview v-for="post in posts" :post="post" :key="post.id" @click="selected_post = getPost(post.id)" />
+		<blog-preview v-for="post in posts" :post="post" :key="post.url_name" @click="selectPost(post.url_name)" />
 		<button class="more_button" id="selector_right">&#9654</button>
 	</div>
 	<div id="shown_post">

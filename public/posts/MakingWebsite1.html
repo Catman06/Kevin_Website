@@ -59,7 +59,7 @@
 			</div>
 			The HTML file can include both full HTML and CSS for display (Though no JavaScript).
 			When loaded, the file is parsed into a Post object that holds all the meta tags as strings,
-			the content as a DocumentFragment, and the style as a CSSStyleSheet.
+			the content as a DocumentFragment, and the style as a string.
 			This does seem like a worse version of a .vue compontent, however, there are two reasons that
 			this HTML method is what I went with. First off, I couldn't find a good way to have the file hold
 			metadata about itself. Vue SFCs are generally meant to be receiving the data, not providing it to
@@ -69,10 +69,10 @@
 		<p>
 			Getting the HTML files into JavaScript ended up being more difficult than I had expected.
 			I needed to get a selection of files' URLs that I wouldn't know beforehand, as I wanted the
-			post files to have meaningful names. Fortunately, Vite (the build tool I'm using for Vue) has
-			a glob import feature that allows me to get an array of paths from a glob path.
-			The paths are then each fetch-ed (creating some issues with having to have the function be async)
-			and converted to HTMLDocuments which are then converted to Post objects.
+			post files to have meaningful names and didn't want to manually enter each file. I ended up
+			needing to use php to get the files' paths. The paths are then each fetch-ed (creating some
+			issues with having to have the function be async) and converted to HTMLDocuments which are
+			then converted to Post objects.
 		</p>
 	</body>
 </html>

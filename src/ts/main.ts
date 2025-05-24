@@ -17,7 +17,7 @@ let stylesheet = getStylesheet("style");
 const navbar_watcher = new ResizeObserver((entries) => {
   for (const navbar of entries) {
     if (typeof stylesheet === "undefined") {
-      stylesheet = document.styleSheets[0];
+      stylesheet = document.styleSheets[document.styleSheets.length-1];
     }
     if (navbar.contentBoxSize && document.documentElement instanceof HTMLElement) {
       // Get current height of the navbar from the home button

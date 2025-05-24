@@ -16,7 +16,7 @@ onMounted(async () => {
 		<BlogPreviewPost
 		v-for="post in posts"
 		:post="post"
-		:key="post.id"
+		:key="post.url_name"
 		></BlogPreviewPost>
 </div>
 </template>

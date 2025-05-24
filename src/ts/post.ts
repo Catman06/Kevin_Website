@@ -1,6 +1,6 @@
 // A class to hold all the data for a post
 export class Post {
-	id: number;
+	url_name: string;
 	publish_time: Date;
 	category: string;
 	title: string;
@@ -8,8 +8,8 @@ export class Post {
 	content: DocumentFragment;
 	stylesheet: string;
 
-	constructor(id: number, publish_time: string, category: string, title: string, blurb: string, content: DocumentFragment, style: string) {
-		this.id = id;
+	constructor(url_name: string, publish_time: string, category: string, title: string, blurb: string, content: DocumentFragment, style: string) {
+		this.url_name = url_name;
 		this.publish_time = new Date(`${publish_time}`);
 		this.category = category;
 		this.title = title;
@@ -25,19 +25,26 @@ export class Post {
 
 // A function that returns a promise of an array of Posts
 export async function loadPosts() {
+	let urls: string[] = [];
 	let post_strings: string[] = [];
 	// Load posts into post_strings
 	try {
 		// Get the files in /posts/
-		const files = import.meta.glob(['/public/posts/*.html', '!**/EmptyPost.html']);
-		for (const path in files) {
-			post_strings.push(await (await fetch(path, { method: "get" })).text());
+		// const file_path = import.meta.glob(["/posts/*.html", '!**/EmptyPost.html']);
+		const file_paths = await (await fetch("https://kevinserver/src/php/getPosts.php", { method: "get" })).json();
+		console.log(await (await fetch("https://kevinserver/src/php/getPosts.php", { method: "get" })).json());
+		for (const index in file_paths) {
+			if (file_paths[index] == "EmptyPost") {
+				continue;
+			}
+			urls.push(`${file_paths[index]}`);
+			post_strings.push(await (await fetch(`/posts/${file_paths[index]}.html`, { method: "get" })).text());
 		}
 	} catch (error) {
 		console.error('Error loading posts', error);
 	}
 
-	if (post_strings.length == 0) {
+	if (post_strings.length == 0 || urls.length == 0) {
 		console.error('Error: no posts found');
 		return;
 	}
@@ -60,6 +67,7 @@ export async function loadPosts() {
 	// Turn the HTMLDocuments into Posts
 	let post_posts: Post[] = [];
 	try {
+		let index = 0;
 		// For each provided Document, add a Post to post_posts
 		for (const post_document of post_html_docs) {
 			const tag_list = post_document.getElementsByTagName("meta");
@@ -96,12 +104,11 @@ export async function loadPosts() {
 			}
 
 			// Apply all the gathered variables into a new Post and return it
-			post_posts.push(new Post(post_posts.length, date, category, title, blurb, content, stylesheet));
-
+			post_posts.push(new Post(urls[index], date, category, title, blurb, content, stylesheet));
+			index++;
 		};
 	} catch (error) {
 		console.error('Error parsing HTML to Posts', error);
 	}
-	console.debug(post_posts)
 	return(post_posts);
 }
