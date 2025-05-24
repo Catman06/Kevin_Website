@@ -22,6 +22,7 @@ const props = defineProps({
 	background-color: #131b13;
 	padding: 10px;
 	margin: .5rem .5rem;
+	transition-duration: .5s;
 
 	& .preview_title {
 		margin: 0px;
@@ -38,5 +39,16 @@ const props = defineProps({
 		overflow: hidden;
 		text-align: justify;
 	}
+}
+
+.post_preview:hover {
+		transform: scale(1.01, 1.01);
+		background-color: #213021;
+		transition-duration: .5s;
+}
+#post_selector>.post_preview:hover {
+		transform: scale(1.05, 1.05);
+		background-color: #213021;
+		transition-duration: .5s;
 }
 </style>

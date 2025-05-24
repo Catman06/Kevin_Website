@@ -1,3 +1,5 @@
+import type { Ref } from "vue";
+
 // A class to hold all the data for a post
 export class Post {
 	url_name: string;
@@ -21,30 +23,97 @@ export class Post {
 	getPublishDate() {
 		return this.publish_time.toLocaleDateString();
 	}
+
+	getTimeCode() {
+		return this.publish_time.valueOf();
+	}
 }
 
 // A function that returns a promise of an array of Posts
-export async function loadPosts() {
-	let urls: string[] = [];
+// load loads already stored posts, recheck also gets any new posts, and refetch downloads all posts
+export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load') {
+	// Array of all posts' names
+	let filenames: string[] = [];
+	// Array of all posts as Post objects
+	let post_posts: Post[] = [];
+	const last_fetch = sessionStorage.getItem('LastFetch');
+	// If the storage hasn't been updated in the last hour, check for new posts. If no lastFetch was found, recheck
+	// If the storage hasn't been updated in the last 12 hours, refresh. If no lastFetch was found, refetch
+	const time_since = Date.now() - parseInt(last_fetch ? last_fetch : '0')
+	if (time_since > 3600000) {
+		task = 'recheck';
+	} else if (time_since > 43200000) {
+		task = 'refetch';
+	}
+
+	if (task == 'recheck' || task == 'refetch') {
+		let new_files: string[] = [];
+		// Try to get the list of posts from the server and add any that are missing from
+		try {
+			const file_paths = await (await fetch("https://kevinserver/src/php/getPosts.php", { method: "get" })).json();
+			for (const file of file_paths) {
+				if (file == "EmptyPost") {
+					continue;
+				}
+				filenames.push(file);
+				// Try to get post data from Session Storage, if not there, add it to new_files
+				sessionStorage.getItem(file) ? null : new_files.push(file);
+			}
+			// Save file list to session storage
+			sessionStorage.setItem('FileList', JSON.stringify(filenames));
+			// If refetching, add all files to new_files for re-download
+			task == 'refetch' ? new_files = filenames : null;
+		} catch (error) {
+			console.error('Error getting list of posts', error);
+		}
+		// Download all files in new_files
+		await downloadPosts(new_files)
+		sessionStorage.setItem('LastFetch', JSON.stringify(Date.now()));
+	}
+
+	// Read all the stored posts into Post objects
+	try {
+		const file_list_string = sessionStorage.getItem('FileList');
+		const stored_files = JSON.parse(file_list_string ? file_list_string : '[]');
+		for (const stored_file of stored_files) {
+			const stored_post = sessionStorage.getItem(stored_file);
+			if (stored_post === null) {
+				continue;
+			}
+			let obj_post = JSON.parse(stored_post);
+			// Turn the JSON object back into a Post one
+			const parser = new DOMParser();
+			let content = new DocumentFragment;
+			content.append(parser.parseFromString(obj_post.content, 'text/html').body);
+			post_posts.push(new Post(obj_post.url_name, obj_post.publish_time, obj_post.category, obj_post.title, obj_post.blurb, content, obj_post.style));
+		}
+	} catch (error) {
+		// On error, report it and clear 'LastFetch' so that new copies of the posts are gotten next time
+		console.error('Error parsing stored files', error);
+		sessionStorage.removeItem('LastFetch');
+	}
+
+	return post_posts;
+}
+
+// Downloads the passed urls and parses them into session storage
+async function downloadPosts(file_paths: string[]) {
+	sessionStorage.setItem('LastFetch', Date.now().toString());
+	// Array of all posts as Post objects
+	let post_posts: Post[] = [];
+	// Array of all posts as strings
 	let post_strings: string[] = [];
 	// Load posts into post_strings
 	try {
-		// Get the files in /posts/
-		// const file_path = import.meta.glob(["/posts/*.html", '!**/EmptyPost.html']);
-		const file_paths = await (await fetch("https://kevinserver/src/php/getPosts.php", { method: "get" })).json();
-		console.log(await (await fetch("https://kevinserver/src/php/getPosts.php", { method: "get" })).json());
 		for (const index in file_paths) {
-			if (file_paths[index] == "EmptyPost") {
-				continue;
-			}
-			urls.push(`${file_paths[index]}`);
-			post_strings.push(await (await fetch(`/posts/${file_paths[index]}.html`, { method: "get" })).text());
+			console.info(`Fetching post: ${file_paths[index]}`);
+			post_strings.push(await (await fetch(`https://kevinserver/posts/${file_paths[index]}.html`, { method: "get" })).text());
 		}
 	} catch (error) {
 		console.error('Error loading posts', error);
 	}
 
-	if (post_strings.length == 0 || urls.length == 0) {
+	if ((post_strings.length == 0 && post_posts.length == 0) || file_paths.length == 0) {
 		console.error('Error: no posts found');
 		return;
 	}
@@ -60,12 +129,11 @@ export async function loadPosts() {
 		console.error('Error parsing Strings to HTML', error);
 	}
 
-	if (post_html_docs.length == 0) {
+	if (post_html_docs.length == 0 && post_posts.length == 0) {
 		console.error('Error: Parsing issue, no Documents');
 	}
 
 	// Turn the HTMLDocuments into Posts
-	let post_posts: Post[] = [];
 	try {
 		let index = 0;
 		// For each provided Document, add a Post to post_posts
@@ -93,7 +161,7 @@ export async function loadPosts() {
 			}
 
 			// Get the body of the content and put into a DocumentFragment
-			const body = post_document.getElementsByTagName("body")[0];
+			const body = post_document.body;
 			content.appendChild(body);
 
 			// Get and store style data
@@ -103,12 +171,31 @@ export async function loadPosts() {
 				stylesheet = "";
 			}
 
-			// Apply all the gathered variables into a new Post and return it
-			post_posts.push(new Post(urls[index], date, category, title, blurb, content, stylesheet));
+			// Apply all the gathered variables into a new Post and return it and store the post in Session Storage
+			let newPost = new Post(file_paths[index], date, category, title, blurb, content, stylesheet)
+			sessionStorage.setItem(file_paths[index], JSON.stringify(newPost, (key, value) => {
+				let serializer = new XMLSerializer;
+				return key == 'content' ? serializer.serializeToString(value.firstChild ? value.firstChild : value.appendChild(new Element)) : value;
+			}, '\t'));
 			index++;
 		};
 	} catch (error) {
 		console.error('Error parsing HTML to Posts', error);
 	}
-	return(post_posts);
+}
+
+export function sortPosts(posts: Ref<Post[]>, sort: string = 'DateDes') {
+	switch (sort) {
+		case 'DateAsc':
+			posts.value.sort((a, b) => { return a.getTimeCode() - b.getTimeCode(); });
+			break;
+		case 'DateDes':
+			posts.value.sort((a, b) => { 
+				return b.getTimeCode() - a.getTimeCode();
+			});
+			break;
+	
+		default:
+			break;
+	}
 }

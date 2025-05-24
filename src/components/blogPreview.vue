@@ -1,13 +1,19 @@
 <script lang="ts" setup>
 import { ref, onMounted, type Ref } from 'vue';
-import { loadPosts, Post } from "../ts/post";
+import { loadPosts, sortPosts, Post } from "../ts/post";
 import BlogPreviewPost from './BlogPreviewPost.vue';
 
-const getPosts = async () => loadPosts()
+const getPosts = async () => loadPosts('load')
 const posts: Ref<Post[], any> = ref();
 
 onMounted(async () => {
-	posts.value = await getPosts();
+	let tempPosts = await getPosts();
+	if (tempPosts === undefined) {
+		console.error("getPosts() returned undefined");
+		return;
+	}
+	posts.value = tempPosts;
+	sortPosts(posts);
 })
 </script>
 

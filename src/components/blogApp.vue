@@ -1,22 +1,13 @@
 <script lang="ts" setup>
 import { ref, onMounted, type Ref } from "vue";
-import { loadPosts, Post } from "../ts/post";
+import { loadPosts, sortPosts, Post } from "../ts/post";
 import BlogPreview from './BlogPreviewPost.vue';
 import BlogPost from "./blogAppPost.vue";
 
-const getPosts = async () => loadPosts();
+const getPosts = async () => loadPosts('load');
 const posts: Ref<Post[], any> = ref([]);
 const nopost = new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, "")
 const selected_post: Ref<Post, any> = ref(nopost);
-
-function getPost(id: string) {
-	for (const post of posts.value) {
-		if (post.url_name == id) {
-			return post;
-		}
-	}
-	return nopost;
-}
 
 // Handle selecting a post and updating the URL
 function selectPost(id: string) {
@@ -30,7 +21,13 @@ function selectPost(id: string) {
 }
 
 onMounted(async () => {
-	posts.value = await getPosts();
+	let tempPosts = await getPosts();
+	if (tempPosts === undefined) {
+		console.error("getPosts() returned undefined");
+		return;
+	}
+	posts.value = tempPosts;
+	sortPosts(posts);
 })
 </script>
 
@@ -58,7 +55,7 @@ onMounted(async () => {
 	overflow-x: scroll;
 
 	&>* {
-		max-height: 8rem;
+		height: 8rem;
 	}
 
 	& .more_button {
