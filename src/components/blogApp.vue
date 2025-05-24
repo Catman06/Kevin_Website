@@ -6,19 +6,25 @@ import BlogPost from "./blogAppPost.vue";
 
 const getPosts = async () => loadPosts('load');
 const posts: Ref<Post[], any> = ref([]);
-const nopost = new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, "")
-const selected_post: Ref<Post, any> = ref(nopost);
+const nopost = ref(new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, ""));
+const selected_post: Ref<Post, any> = nopost;
 
-// Handle selecting a post and updating the URL
-function selectPost(id: string) {
+// Change 
+function selectPost(url_name: string) {
+		location.hash = url_name;
+}
+
+// Change display
+addEventListener("hashchange", (event) => {
+event.newURL == event.oldURL ? null : displayPost(location.hash.slice(1));
+})
+
+function displayPost(url_name: string) {
 	for (const post of posts.value) {
-		if (post.url_name == id) {
-			selected_post.value = post
-			let currenturl = window.location.origin + window.location.pathname;
-			window.history.pushState({ currentPost: post.title }, '', `${currenturl}#${post.url_name}`)
-		}
+		post.url_name == url_name ? selected_post.value = post : null;
 	}
 }
+
 
 onMounted(async () => {
 	let tempPosts = await getPosts();
@@ -28,6 +34,7 @@ onMounted(async () => {
 	}
 	posts.value = tempPosts;
 	sortPosts(posts);
+	displayPost(window.location.hash.slice(1));
 })
 </script>
 

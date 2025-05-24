@@ -6,6 +6,10 @@ import BlogPreviewPost from './BlogPreviewPost.vue';
 const getPosts = async () => loadPosts('load')
 const posts: Ref<Post[], any> = ref();
 
+function openPost(post: Post) {
+	window.location.assign(`${window.location.origin}/html/blog.html#${post.url_name}`)
+}
+
 onMounted(async () => {
 	let tempPosts = await getPosts();
 	if (tempPosts === undefined) {
@@ -23,6 +27,7 @@ onMounted(async () => {
 		v-for="post in posts"
 		:post="post"
 		:key="post.url_name"
+		@click="openPost(post)"
 		></BlogPreviewPost>
 </div>
 </template>
