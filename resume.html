@@ -25,7 +25,7 @@
 			}
 
 			let throttled = false;
-			window.addEventListener('resize', () => {
+			const resizeObserver = new ResizeObserver((entries) => {
 				if (!throttled) {
 					throttled = true
 					setTimeout(() => {
@@ -34,7 +34,6 @@
 					}, 100);
 				}
 			})
-
 		</script>
     <script type="module" src="/src/ts/main.ts"></script>
   </body>
