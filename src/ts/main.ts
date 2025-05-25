@@ -13,23 +13,19 @@ function getStylesheet(title: String) {
     }
   }
 }
-let stylesheet = getStylesheet("style");
+let stylesheet = document.styleSheets[0];
 const navbar_watcher = new ResizeObserver((entries) => {
-  for (const navbar of entries) {
-    if (typeof stylesheet === "undefined") {
-      stylesheet = document.styleSheets[document.styleSheets.length-1];
+  // Set nav_height to the blockSize of the first entry (which should be the only one: the last navbar option)
+  let nav_height = entries[0].contentBoxSize[0].blockSize;
+
+  // Find the :root rule
+  for (const rule of stylesheet.cssRules) {
+    if (rule instanceof CSSStyleRule && rule.selectorText == ':root') {
+      // Set the css variable --nav_height to nav_height
+      rule.style.setProperty("--nav_height", `${nav_height}px`);
+      return;
     }
-    if (navbar.contentBoxSize && document.documentElement instanceof HTMLElement) {
-      // Get current height of the navbar from the home button
-      let nav_height = navbar.contentBoxSize[0].blockSize;
-      for (const index in stylesheet.cssRules) {
-        let rule = stylesheet.cssRules[index]
-        // If the rule is a style rule and has the selector of :root, set the new nav_height
-        if (rule instanceof CSSStyleRule && rule.selectorText == ':root') {
-          rule.style.setProperty("--nav_height", `${nav_height}px`)
-        }
-      }
-    }
+    console.error('Failed to set --nav_height.')
   }
 })
 let navbar = document.querySelector(".navbar li:last-child");
