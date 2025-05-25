@@ -51,7 +51,9 @@ watch(() => props.post, (newpost, _oldpost) => {
 
 <style lang="css">
 #blog_post {
-	background-color: black;
+	--blog_post_background_color: #121612;
+	--blog_post_header_color: #202920;
+	background-color: var(--blog_post_background_color);
 	border-radius: 25px;
 	margin: 5px;
 	padding: 1rem;
@@ -60,6 +62,9 @@ watch(() => props.post, (newpost, _oldpost) => {
 	text-align: center;
 	& #post_header {
 		margin-bottom: 1rem;
+		background-color: var(--blog_post_header_color);
+		padding: .5rem;
+		border-radius: 1rem;
 		
 		& h1 {
 			display:block;
@@ -83,6 +88,13 @@ watch(() => props.post, (newpost, _oldpost) => {
 	& #post_content {
 		text-align: justify;
 		height: fit-content;
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	#blog_post {
+		--blog_post_background_color: #b0cab0;
+		--blog_post_header_color: #81b981;		
 	}
 }
 </style>

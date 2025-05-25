@@ -18,8 +18,10 @@ const props = defineProps({
 
 <style>
 .post_preview {
+	--blog_preview_post_background_color: #131b13;
+	--blog_preview_post_hover_color: #213021;
 	border-radius: 25px;
-	background-color: #131b13;
+	background-color: var(--blog_preview_post_background_color);
 	padding: 10px;
 	margin: .5rem .5rem;
 	transition-duration: .5s;
@@ -43,12 +45,19 @@ const props = defineProps({
 
 .post_preview:hover {
 		transform: scale(1.01, 1.01);
-		background-color: #213021;
+		background-color: var(--blog_preview_post_hover_color);
 		transition-duration: .5s;
 }
 #post_selector>.post_preview:hover {
 		transform: scale(1.05, 1.05);
-		background-color: #213021;
+		background-color: var(--blog_preview_post_hover_color);
 		transition-duration: .5s;
+}
+
+@media (prefers-color-scheme: light) {
+	.post_preview {
+		--blog_preview_post_background_color: #86b186;
+		--blog_preview_post_hover_color: #6ea36e;
+	}
 }
 </style>

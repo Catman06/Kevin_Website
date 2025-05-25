@@ -2,7 +2,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: #ecebd5;
   background-color: #242424;
 
   font-synthesis: none;
@@ -14,7 +14,7 @@
   /* Colors */
   --nav_hover_color: #84b384;
   --alt_text_color: #242424;
-  --column_background_color: #363636;
+  --nav_background_color: #447044;
   /* Values */
   --nav_height: 41;
   --nav_logo: 39;
@@ -34,7 +34,7 @@ body {
   position:sticky;
   list-style-type: none;
   overflow: hidden;
-  background-color: #447044;
+  background-color: var(--nav_background_color);
   width: 100%;
   margin: 0;
   padding: 0;
@@ -79,7 +79,13 @@ body {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #202020;
+    background-color: #faf9f4;
+
+    /* Variable */
+    /* Colors */
+    --nav_hover_color: #84b384;
+    --alt_text_color: #242424;
+    --nav_background_color: #447044;
   }
 }

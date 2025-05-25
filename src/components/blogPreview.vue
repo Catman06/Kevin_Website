@@ -22,7 +22,7 @@ onMounted(async () => {
 </script>
 
 <template>
-<div id="blog_app">
+<div id="blog_preview_app">
 		<BlogPreviewPost
 		v-for="post in posts"
 		:post="post"
@@ -33,11 +33,19 @@ onMounted(async () => {
 </template>
 
 <style lang="css">
-#blog_app {
+#blog_preview_app {
+	--blog_preview_background_color: #3a493a;
+	
 	height: calc(100% - 3rem);
 	overflow-y: auto;
-	background-color: #3a493a;
+	background-color: var(--blog_preview_background_color);
 	border-radius: 1rem;
 	margin: 0;
+}
+
+@media (prefers-color-scheme: light) {
+	#blog_preview_app {
+		--blog_preview_background_color: #7e9b7e;
+	}
 }
 </style>
