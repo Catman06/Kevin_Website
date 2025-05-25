@@ -27,7 +27,6 @@ function update_batch_size() {
 let throttled = false;
 window.addEventListener('resize', () => {
 	if (!throttled) {
-		// update_batch_size();
 		throttled = true
 		setTimeout(() => {
 			throttled = false;
