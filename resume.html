@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/kevinFavicon.ico" />
+    <link rel="stylesheet" href="/src/css/style.css" />
+    <title>Kevin Kamasaki's Resume</title>
+  </head>
+  <body>
+    <script>0</script>
+    <ul class="navbar">
+      <li class="logo_holder"><img class="logo"></li>
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/blog.html">Blog</a></li>
+      <li><a href="/resume.html" class="active">Resume</a></li>
+    </ul>
+		<object type="application/pdf" data="Kevin_Kamasaki_Resume.pdf" width="100%" onload="update_pdf_height()"></object>
+		<script>
+			let obj = document.querySelector("object");
+			let avail_height = document.querySelector("html").clientHeight - document.querySelector(".navbar").clientHeight;
+			function update_pdf_height() {
+				obj.height = avail_height;
+				console.log('change height')
+			}
+
+			let throttled = false;
+			window.addEventListener('resize', () => {
+				if (!throttled) {
+					throttled = true
+					setTimeout(() => {
+						throttled = false;
+						update_pdf_height();
+					}, 100);
+				}
+			})
+
+		</script>
+    <script type="module" src="/src/ts/main.ts"></script>
+  </body>
+</html>
