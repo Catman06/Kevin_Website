@@ -7,7 +7,7 @@ const getPosts = async () => loadPosts('load')
 const posts: Ref<Post[], any> = ref();
 
 function openPost(post: Post) {
-	window.location.assign(`${window.location.origin}/html/blog.html#${post.url_name}`)
+	window.location.assign(`${window.location.origin}/blog.html#${post.url_name}`)
 }
 
 onMounted(async () => {
