@@ -10,7 +10,7 @@ const posts: Ref<Post[], any> = ref([]);
 // 'Post' to display when no post is selected
 const nopost = ref(new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, ""));
 // How many posts to preview at once
-const batch_size = ref(3);
+const batch_size = ref(1);
 
 // Update batch_size based on the width of the root html element
 function update_batch_size() {
@@ -104,6 +104,7 @@ onMounted(async () => {
 	}
 	posts.value = tempPosts;
 	sortPosts(posts);
+	update_batch_size();
 	displayPost(window.location.hash.slice(1));
 })
 </script>
