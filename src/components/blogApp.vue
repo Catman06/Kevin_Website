@@ -1,13 +1,35 @@
 <script lang="ts" setup>
-import { ref, onMounted, type Ref } from "vue";
+import { ref, onMounted, type Ref, computed } from "vue";
 import { loadPosts, sortPosts, Post } from "../ts/post";
 import BlogPreview from './BlogPreviewPost.vue';
 import BlogPost from "./blogAppPost.vue";
 
 const getPosts = async () => loadPosts('load');
+// ref to the array of all posts
 const posts: Ref<Post[], any> = ref([]);
+// 'Post' to display when no post is selected
 const nopost = ref(new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, ""));
+// How many posts to preview at once
+const batch_size = ref(4);
+// What group of posts to preview
+const batch_index = ref(0);
+// The previewed posts
+const preview_batch: Ref<Post[], any> = computed(() => {
+	let start = batch_index.value*batch_size.value;
+	let end = start + batch_size.value;
+	
+	// If the batch would be outside the array, pull batch_index back in
+	start >= posts.value.length ? batch_index.value-- : null;
+	end <= 0 ? batch_index.value++ : null;
+
+	return posts.value.slice(start, end);
+});
+// The currently displayed post
 const selected_post: Ref<Post, any> = nopost;
+
+function getBatch(size: number, index: number) {
+	return posts.value.slice(index*size, index*size+size);
+}
 
 // Change the hash of the URL
 function changeHash(url_name: string) {
@@ -43,9 +65,9 @@ onMounted(async () => {
 
 <template>
 	<div id="post_selector">
-		<button class="more_button" id="selector_left">&#9664</button>
-		<blog-preview v-for="post in posts" :post="post" :key="post.url_name" @click="changeHash(post.url_name)" />
-		<button class="more_button" id="selector_right">&#9654</button>
+		<button class="more_button" id="selector_left" @click="batch_index--">&#9664</button>
+		<blog-preview v-for="post in preview_batch" :post="post" :key="post.url_name" @click="changeHash(post.url_name)" />
+		<button class="more_button" id="selector_right" @click="batch_index++">&#9654</button>
 	</div>
 	<div id="shown_post">
 		<blog-post :post="selected_post" />
