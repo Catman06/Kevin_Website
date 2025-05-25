@@ -18,14 +18,13 @@
 		<object type="application/pdf" data="Kevin_Kamasaki_Resume.pdf" width="100%" onload="update_pdf_height()"></object>
 		<script>
 			let obj = document.querySelector("object");
-			let avail_height = document.querySelector("html").clientHeight - document.querySelector(".navbar").clientHeight;
 			function update_pdf_height() {
-				obj.height = avail_height;
+				obj.height = document.querySelector("html").clientHeight - document.querySelector(".navbar").clientHeight - 10;
 				console.log('change height')
 			}
 
 			let throttled = false;
-			const resizeObserver = new ResizeObserver((entries) => {
+			window.addEventListener('resize', () => {
 				if (!throttled) {
 					throttled = true
 					setTimeout(() => {
@@ -33,7 +32,7 @@
 						update_pdf_height();
 					}, 100);
 				}
-			})
+			});
 		</script>
     <script type="module" src="/src/ts/main.ts"></script>
   </body>
