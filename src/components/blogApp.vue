@@ -15,7 +15,6 @@ const batch_size = ref(3);
 // Update batch_size based on the width of the root html element
 function update_batch_size() {
 	const root = document.querySelector('html');
-	console.log(root)
 	if (root instanceof HTMLElement) {
 		batch_size.value = Math.round(root.clientWidth / 360);
 	} else {
