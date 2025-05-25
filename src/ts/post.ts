@@ -85,7 +85,7 @@ export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load') {
 			const parser = new DOMParser();
 			let content = new DocumentFragment;
 			content.append(parser.parseFromString(obj_post.content, 'text/html').body);
-			post_posts.push(new Post(obj_post.url_name, obj_post.publish_time, obj_post.category, obj_post.title, obj_post.blurb, content, obj_post.style));
+			post_posts.push(new Post(obj_post.url_name, obj_post.publish_time, obj_post.category, obj_post.title, obj_post.blurb, content, obj_post.stylesheet));
 		}
 	} catch (error) {
 		// On error, report it and clear 'LastFetch' so that new copies of the posts are gotten next time
@@ -175,6 +175,8 @@ async function downloadPosts(file_paths: string[]) {
 			let newPost = new Post(file_paths[index], date, category, title, blurb, content, stylesheet)
 			sessionStorage.setItem(file_paths[index], JSON.stringify(newPost, (key, value) => {
 				let serializer = new XMLSerializer;
+				// If the key is 'content' and if value.firstChild isn't null, serialize and return value.firstChild
+				// If value.firstChild is null, serialize an empty element. If key isn't 'content' just return value untouched
 				return key == 'content' ? serializer.serializeToString(value.firstChild ? value.firstChild : value.appendChild(new Element)) : value;
 			}, '\t'));
 			index++;

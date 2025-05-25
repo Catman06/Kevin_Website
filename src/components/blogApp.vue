@@ -9,8 +9,8 @@ const posts: Ref<Post[], any> = ref([]);
 const nopost = ref(new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, ""));
 const selected_post: Ref<Post, any> = nopost;
 
-// Change 
-function selectPost(url_name: string) {
+// Change the hash of the URL
+function changeHash(url_name: string) {
 		location.hash = url_name;
 }
 
@@ -24,7 +24,6 @@ function displayPost(url_name: string) {
 		post.url_name == url_name ? selected_post.value = post : null;
 	}
 }
-
 
 onMounted(async () => {
 	let tempPosts = await getPosts();
@@ -45,7 +44,7 @@ onMounted(async () => {
 <template>
 	<div id="post_selector">
 		<button class="more_button" id="selector_left">&#9664</button>
-		<blog-preview v-for="post in posts" :post="post" :key="post.url_name" @click="selectPost(post.url_name)" />
+		<blog-preview v-for="post in posts" :post="post" :key="post.url_name" @click="changeHash(post.url_name)" />
 		<button class="more_button" id="selector_right">&#9654</button>
 	</div>
 	<div id="shown_post">
