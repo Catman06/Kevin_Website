@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, type Ref, computed } from "vue";
+import { ref, onMounted, type Ref, computed, watch } from "vue";
 import { loadPosts, sortPosts, Post } from "../ts/post";
 import BlogPreview from './BlogPreviewPost.vue';
 import BlogPost from "./blogAppPost.vue";
@@ -34,13 +34,12 @@ window.addEventListener('resize', () => {
 	}
 })
 
-
 // What group of posts to preview
 const batch_index = ref(0);
 // The previewed posts
 const preview_batch: Ref<Post[], any> = computed(() => {
-	let start = batch_index.value*batch_size.value;
-	let end = start + batch_size.value;
+	const start = batch_index.value*batch_size.value;
+	const end = start + batch_size.value;
 	
 	// If the batch would be outside the array, pull batch_index back in
 	start >= posts.value.length ? batch_index.value-- : null;
@@ -48,6 +47,36 @@ const preview_batch: Ref<Post[], any> = computed(() => {
 
 	return posts.value.slice(start, end);
 });
+
+// Watcher for previewed posts. Greys out the left or right button if at the end of the post list
+watch(preview_batch, () => {
+	const prev_end = (batch_index.value - 1)*batch_size.value + batch_size.value;
+	const next_start = (batch_index.value + 1)*batch_size.value;
+	const left_button = document.getElementById("selector_left");
+	const right_button = document.getElementById("selector_right");
+	
+	// Narrow the types of left and right button
+	if (!left_button) {
+		console.error("Failed to get #selector_left");
+		return;
+	} else if (!right_button) {
+		console.error("Failed to get #selector_right");
+		return;
+	}
+	// Change visibility of buttons based on whether the prev/next batch would be out of bounds
+	if (prev_end <= 0) {
+		left_button.style.visibility = "hidden";
+	} else if (left_button.style.visibility == "hidden") {
+		left_button.style.visibility = "visible";
+	}
+	if (next_start >= posts.value.length) {
+		right_button.style.visibility = "hidden";
+	} else if (right_button.style.visibility == "hidden") {
+		right_button.style.visibility = "visible";
+	}
+})
+
+
 // The currently displayed post
 const selected_post: Ref<Post, any> = nopost;
 
