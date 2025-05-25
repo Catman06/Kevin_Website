@@ -10,7 +10,33 @@ const posts: Ref<Post[], any> = ref([]);
 // 'Post' to display when no post is selected
 const nopost = ref(new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, ""));
 // How many posts to preview at once
-const batch_size = ref(4);
+const batch_size = ref(3);
+
+// Update batch_size based on the width of the root html element
+function update_batch_size() {
+	const root = document.querySelector('html');
+	console.log(root)
+	if (root instanceof HTMLElement) {
+		batch_size.value = Math.round(root.clientWidth / 360);
+	} else {
+		batch_size.value = 3;
+	}
+}
+
+// Runs update_batch_size() when the window is resized, but throttled to once every 100ms
+let throttled = false;
+window.addEventListener('resize', () => {
+	if (!throttled) {
+		// update_batch_size();
+		throttled = true
+		setTimeout(() => {
+			throttled = false;
+			update_batch_size();
+		}, 100);
+	}
+})
+
+
 // What group of posts to preview
 const batch_index = ref(0);
 // The previewed posts
@@ -26,10 +52,6 @@ const preview_batch: Ref<Post[], any> = computed(() => {
 });
 // The currently displayed post
 const selected_post: Ref<Post, any> = nopost;
-
-function getBatch(size: number, index: number) {
-	return posts.value.slice(index*size, index*size+size);
-}
 
 // Change the hash of the URL
 function changeHash(url_name: string) {
