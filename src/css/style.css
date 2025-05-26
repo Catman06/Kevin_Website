@@ -15,9 +15,6 @@
   --nav_hover_color: #84b384;
   --alt_text_color: #242424;
   --nav_background_color: #447044;
-  /* Values */
-  --nav_height: 41;
-  --nav_logo: 39;
 }
 
 .clearfix::after {
@@ -31,23 +28,36 @@ body {
 }
 
 .navbar {
+  display: flex;
   position:sticky;
-  list-style-type: none;
-  overflow: hidden;
+  align-items: center;
   background-color: var(--nav_background_color);
   width: 100%;
+  font-size: large;
+  height: 3em;
   margin: 0;
   padding: 0;
 
-  & li {
-  float: left;
-}
+  & .logo_holder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 3em;
+    overflow: hidden;
+    & img {
+      height: 80%;
+    }
+  }
 
   & a {
-    display: block;
-    text-align: center;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 100%;
+    line-height: 300%;
     color: inherit;
-    padding: 15px;
+    text-align: center;
+    padding: 0px 15px;
     text-decoration: none;
     transition: color .5s, background-color 1s;
   }
@@ -61,19 +71,6 @@ body {
   & a.active {
     background-color: var(--nav_hover_color);
     color: var(--alt_text_color);
-  }
-
-  & .logo_holder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: var(--nav_height);
-    width: 3rem;
-    min-width: var(--nav_height);
-    overflow: hidden;
-    & img {
-      height: calc(var(--nav_height) * .8);
-    }
   }
 }
 
