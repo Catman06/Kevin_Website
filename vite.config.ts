@@ -16,7 +16,6 @@ export default defineConfig({
         blog: resolve(__dirname, 'blog.html'),
         resume: resolve(__dirname, 'resume.html')
       }
-    },
-    cssCodeSplit: false
+    }
   }
 })
