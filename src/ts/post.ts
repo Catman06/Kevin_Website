@@ -20,18 +20,18 @@ export class Post {
 		this.stylesheet = style;
 	}
 
-	getPublishDate() {
+	getPublishDate(): string {
 		return this.publish_time.toLocaleDateString();
 	}
 
-	getTimeCode() {
+	getTimeCode(): number {
 		return this.publish_time.valueOf();
 	}
 }
 
 // A function that returns a promise of an array of Posts
 // load loads already stored posts, recheck also gets any new posts, and refetch downloads all posts
-export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load') {
+export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load'): Promise<Post[]> {
 	// Array of all posts' names
 	let filenames: string[] = [];
 	// Array of all posts as Post objects
@@ -97,7 +97,7 @@ export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load') {
 }
 
 // Downloads the passed urls and parses them into session storage
-async function downloadPosts(file_paths: string[]) {
+async function downloadPosts(file_paths: string[]): Promise<void> {
 	sessionStorage.setItem('LastFetch', Date.now().toString());
 	// Array of all posts as Post objects
 	let post_posts: Post[] = [];
@@ -186,7 +186,7 @@ async function downloadPosts(file_paths: string[]) {
 	}
 }
 
-export function sortPosts(posts: Ref<Post[]>, sort: string = 'DateDes') {
+export function sortPosts(posts: Ref<Post[]>, sort: string = 'DateDes'): void {
 	switch (sort) {
 		case 'DateAsc':
 			posts.value.sort((a, b) => { return a.getTimeCode() - b.getTimeCode(); });
