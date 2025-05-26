@@ -48,6 +48,7 @@ export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load'): 
 
 	if (task == 'recheck' || task == 'refetch') {
 		let new_files: string[] = [];
+		sessionStorage.setItem('LastFetch', JSON.stringify(Date.now()));
 		// Try to get the list of posts from the server and add any that are missing from
 		try {
 			const file_paths = await (await fetch("https://kevinserver/src/php/getPosts.php", { method: "get" })).json();
@@ -65,10 +66,10 @@ export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load'): 
 			task == 'refetch' ? new_files = filenames : null;
 		} catch (error) {
 			console.error('Error getting list of posts', error);
+			sessionStorage.removeItem('LastFetch');
 		}
 		// Download all files in new_files
 		await downloadPosts(new_files)
-		sessionStorage.setItem('LastFetch', JSON.stringify(Date.now()));
 	}
 
 	// Read all the stored posts into Post objects
@@ -98,7 +99,6 @@ export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load'): 
 
 // Downloads the passed urls and parses them into session storage
 async function downloadPosts(file_paths: string[]): Promise<void> {
-	sessionStorage.setItem('LastFetch', Date.now().toString());
 	// Array of all posts as Post objects
 	let post_posts: Post[] = [];
 	// Array of all posts as strings
@@ -111,6 +111,7 @@ async function downloadPosts(file_paths: string[]): Promise<void> {
 		}
 	} catch (error) {
 		console.error('Error loading posts', error);
+		sessionStorage.removeItem('LastFetch');
 	}
 
 	if ((post_strings.length == 0 && post_posts.length == 0) || file_paths.length == 0) {
@@ -127,6 +128,7 @@ async function downloadPosts(file_paths: string[]): Promise<void> {
 		};
 	} catch (error) {
 		console.error('Error parsing Strings to HTML', error);
+		sessionStorage.removeItem('LastFetch');
 	}
 
 	if (post_html_docs.length == 0 && post_posts.length == 0) {
@@ -183,6 +185,7 @@ async function downloadPosts(file_paths: string[]): Promise<void> {
 		};
 	} catch (error) {
 		console.error('Error parsing HTML to Posts', error);
+		sessionStorage.removeItem('LastFetch');
 	}
 }
 
