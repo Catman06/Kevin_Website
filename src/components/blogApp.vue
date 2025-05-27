@@ -77,6 +77,8 @@ watch(preview_batch, () => {
 })
 
 
+// The previouly displayed post's url_name
+let previous_post: string = nopost.value.url_name;
 // The currently displayed post
 const selected_post: Ref<Post, any> = nopost;
 
@@ -92,7 +94,10 @@ event.newURL == event.oldURL ? null : displayPost(location.hash.slice(1));
 
 function displayPost(url_name: string) {
 	for (const post of posts.value) {
-		post.url_name == url_name ? selected_post.value = post : null;
+		if (post.url_name == url_name) {
+			previous_post = selected_post.value.url_name;
+			selected_post.value = post;
+		}
 	}
 }
 
@@ -102,15 +107,55 @@ onMounted(async () => {
 		console.error("getPosts() returned undefined");
 		return;
 	}
+	stylesheet = getStyleSheet();
 	posts.value = tempPosts;
 	sortPosts(posts);
 	update_batch_size();
 	displayPost(window.location.hash.slice(1));
 })
-</script>
 
-<script lang="ts">
-	
+// Get this component's stylesheet
+let stylesheet: any = null;
+function getStyleSheet() {
+	for (const sheet of document.styleSheets) {
+		const result = sheet.cssRules.item(0)?.cssText.search(/#post_selector/);
+		if (result != undefined && result >= 0) {
+			return sheet;
+		}
+	}
+}
+
+function setTransitionDirection(_element: any) {
+	// If the stylesheet wasn't found, don't try to alter it
+	if (!(stylesheet instanceof CSSStyleSheet)) { return };
+
+	// Get the indices of the old and new posts
+	let oldIndex = posts.value.findIndex((val, _ind, _arr) => {	return val.url_name == previous_post });
+	let newIndex = posts.value.findIndex((val, _ind, _arr) => { return val.url_name == selected_post.value.url_name });
+
+	// Depending on the relative indices, change the direction of the animation
+	if (oldIndex > newIndex) {
+		replaceCSSRule(".shown_post-enter-from", "transform: translateX(-100vw);");
+		replaceCSSRule(".shown_post-leave-to", "transform: translateX(100vw);");
+	} else if (oldIndex < newIndex) {
+		replaceCSSRule(".shown_post-enter-from", "transform: translateX(100vw);");
+		replaceCSSRule(".shown_post-leave-to", "transform: translateX(-100vw);");
+	}
+}
+
+// Replace the CSS rule with one with new declarations
+function replaceCSSRule(selector: string, newRule: string) {
+	if (!(stylesheet instanceof CSSStyleSheet)) { return };
+	// Find the requested rule
+	for (const index in stylesheet.cssRules) {
+		// Replace the old with the new
+		if (stylesheet.cssRules[index].cssText.search(selector) >= 0) {
+			stylesheet.deleteRule(parseInt(index));
+			stylesheet.insertRule(selector + '{ ' + newRule + ' }', parseInt(index));
+			return;
+		}
+	}
+}
 </script>
 
 <template>
@@ -119,9 +164,9 @@ onMounted(async () => {
 		<blog-preview v-for="post in preview_batch" :post="post" :key="post.url_name" @click="changeHash(post.url_name)" />
 		<button class="more_button" id="selector_right" @click="batch_index++">&#9654</button>
 	</div>
-	<div id="shown_post">
-		<blog-post :post="selected_post" />
-	</div>
+	<Transition id="shown_post" name="shown_post" mode="out-in" @before-leave="setTransitionDirection">
+		<blog-post :post="selected_post" :key="selected_post.url_name" />
+	</Transition>
 </template>
 
 <style lang="css">
@@ -140,6 +185,17 @@ onMounted(async () => {
 		width: 3rem;
 		height: 3.5rem;
 	}
+}
 
+.shown_post-enter-active,
+.shown_post-leave-active {
+	transition: all .25s ease-in-out;
+}
+
+.shown_post-enter-from {
+	transform: translateX(-100vw);
+}
+.shown_post-leave-to {
+	transform: translateX(100vw);
 }
 </style>

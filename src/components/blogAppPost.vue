@@ -12,32 +12,39 @@ const loaded = ref(false);
 // Get the element for where the content should go
 let content_spot: HTMLElement | null;
 onMounted(() => {
-	content_spot = document.getElementById("post_content");
-})
-
-// Create a stylesheet to apply the post's style to
-const static_stylesheet: CSSStyleSheet = new CSSStyleSheet;
-document.adoptedStyleSheets.push(static_stylesheet);
-
-// When props.post changes, replace the old content and style with the new
-watch(() => props.post, (newpost, _oldpost) => {
 	if (props.post.category == "NoPost") {
 		loaded.value = false;
+		return;
 	} else {
 		loaded.value = true;
 	}
+	content_spot = document.getElementById("post_content");
 	if (!content_spot)
 		return
 	// Extract and place the post's content
-	content_spot.innerHTML = newpost.content.querySelectorAll("body")[0].innerHTML
+	content_spot ? content_spot.innerHTML = props.post.content.querySelectorAll("body")[0].innerHTML : null
 
-	// Replace stylesheets
-	static_stylesheet.replaceSync(newpost.stylesheet);
+	// Apply Style
+	const stylesheet = document.adoptedStyleSheets.find((stylesheet) => stylesheet.cssRules.item(0)?.cssText == "post_stylesheet { display: none; }");
+	if (stylesheet) {
+		stylesheet.replaceSync(props.post.stylesheet);
+		stylesheet.insertRule("post_stylesheet { display: none }", 0);
+	} else {
+		for (const sheet of document.adoptedStyleSheets) {
+			console.log(sheet.cssRules.item(0));
+		}
+		console.log('No post stylesheet found, making a new one.')
+		const new_stylesheet: CSSStyleSheet = new CSSStyleSheet;
+		new_stylesheet.insertRule("post_stylesheet { display: none }", 0);
+		document.adoptedStyleSheets.push(new_stylesheet);
+	}
 })
 
 </script>
 
+<!-- Extra <div> is because <Transition> eats the outermost element for some reason -->
 <template>
+<div>
 <div id="blog_post">
 	<div id="post_header">
 		<h1 id="post_title">{{ post.title }}</h1>
@@ -46,6 +53,7 @@ watch(() => props.post, (newpost, _oldpost) => {
 	</div>
 	<p id="post_blurb">{{ post.blurb }}</p>
 	<div id="post_content" class="clearfix"></div>
+</div>
 </div>
 </template>
 
