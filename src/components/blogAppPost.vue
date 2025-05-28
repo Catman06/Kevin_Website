@@ -32,6 +32,7 @@ onMounted(() => {
 	} else {
 		console.log('No post stylesheet found, making a new one.')
 		const new_stylesheet: CSSStyleSheet = new CSSStyleSheet;
+		new_stylesheet.replaceSync(props.post.stylesheet);
 		new_stylesheet.insertRule("post_stylesheet { display: none }", 0);
 		document.adoptedStyleSheets.push(new_stylesheet);
 	}
