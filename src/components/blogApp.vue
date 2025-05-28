@@ -116,7 +116,7 @@ onMounted(async () => {
 		console.error("getPosts() returned undefined");
 		return;
 	}
-	stylesheet = getStyleSheet(new RegExp(/#post_selector/));
+	stylesheet = getStyleSheet(new RegExp(/^#post_selector$/));
 	posts.value = tempPosts;
 	sortPosts(posts);
 	update_batch_size();
