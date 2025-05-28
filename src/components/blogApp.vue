@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, type Ref, computed, watch } from "vue";
 import { loadPosts, sortPosts, Post } from "../ts/post";
+import { getStyleSheet, replaceCSSRule } from "../ts/cssManip";
 import BlogPreview from './BlogPreviewPost.vue';
 import BlogPost from "./blogAppPost.vue";
 
@@ -115,15 +116,7 @@ onMounted(async () => {
 })
 
 // Get this component's stylesheet
-let stylesheet: any = null;
-function getStyleSheet() {
-	for (const sheet of document.styleSheets) {
-		const result = sheet.cssRules.item(0)?.cssText.search(/#post_selector/);
-		if (result != undefined && result >= 0) {
-			return sheet;
-		}
-	}
-}
+let stylesheet: CSSStyleSheet | undefined = getStyleSheet();
 
 function setTransitionDirection(_element: any) {
 	// If the stylesheet wasn't found, don't try to alter it
@@ -135,27 +128,15 @@ function setTransitionDirection(_element: any) {
 
 	// Depending on the relative indices, change the direction of the animation
 	if (oldIndex > newIndex) {
-		replaceCSSRule(".shown_post-enter-from", "transform: translateX(-100vw);");
-		replaceCSSRule(".shown_post-leave-to", "transform: translateX(100vw);");
+		replaceCSSRule(stylesheet, ".shown_post-enter-from", "transform: translateX(-100vw);");
+		replaceCSSRule(stylesheet, ".shown_post-leave-to", "transform: translateX(100vw);");
 	} else if (oldIndex < newIndex) {
-		replaceCSSRule(".shown_post-enter-from", "transform: translateX(100vw);");
-		replaceCSSRule(".shown_post-leave-to", "transform: translateX(-100vw);");
+		replaceCSSRule(stylesheet, ".shown_post-enter-from", "transform: translateX(100vw);");
+		replaceCSSRule(stylesheet, ".shown_post-leave-to", "transform: translateX(-100vw);");
 	}
 }
 
-// Replace the CSS rule with one with new declarations
-function replaceCSSRule(selector: string, newRule: string) {
-	if (!(stylesheet instanceof CSSStyleSheet)) { return };
-	// Find the requested rule
-	for (const index in stylesheet.cssRules) {
-		// Replace the old with the new
-		if (stylesheet.cssRules[index].cssText.search(selector) >= 0) {
-			stylesheet.deleteRule(parseInt(index));
-			stylesheet.insertRule(selector + '{ ' + newRule + ' }', parseInt(index));
-			return;
-		}
-	}
-}
+
 </script>
 
 <template>
