@@ -77,7 +77,6 @@ watch(preview_batch, () => {
 	}
 })
 
-
 // The previouly displayed post's url_name
 let previous_post: string = nopost.value.url_name;
 // The currently displayed post
@@ -108,7 +107,7 @@ onMounted(async () => {
 		console.error("getPosts() returned undefined");
 		return;
 	}
-	stylesheet = getStyleSheet();
+	stylesheet = getStyleSheet(new RegExp(/#post_selector/));
 	posts.value = tempPosts;
 	sortPosts(posts);
 	update_batch_size();
@@ -116,7 +115,7 @@ onMounted(async () => {
 })
 
 // Get this component's stylesheet
-let stylesheet: CSSStyleSheet | undefined = getStyleSheet();
+let stylesheet: CSSStyleSheet | undefined = undefined;
 
 function setTransitionDirection(_element: any) {
 	// If the stylesheet wasn't found, don't try to alter it
@@ -135,7 +134,6 @@ function setTransitionDirection(_element: any) {
 		replaceCSSRule(stylesheet, ".shown_post-leave-to", "transform: translateX(-100vw);");
 	}
 }
-
 
 </script>
 

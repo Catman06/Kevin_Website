@@ -1,6 +1,6 @@
-export function getStyleSheet(): CSSStyleSheet | undefined {
+export function getStyleSheet(selector_zero: RegExp): CSSStyleSheet | undefined {
 	for (const sheet of document.styleSheets) {
-		const result = sheet.cssRules.item(0)?.cssText.search(/#post_selector/);
+		const result = sheet.cssRules.item(0)?.cssText.search(selector_zero);
 		if (result != undefined && result >= 0) {
 			return sheet;
 		}
