@@ -35,6 +35,7 @@ window.addEventListener('resize', () => {
 	}
 })
 
+let previous_batch = 0;
 // What group of posts to preview
 const batch_index = ref(0);
 // The previewed posts
@@ -49,7 +50,13 @@ const preview_batch: Ref<Post[], any> = computed(() => {
 	return posts.value.slice(start, end);
 });
 
-// Watcher for previewed posts. Greys out the left or right button if at the end of the post list
+// Change the current batch of previews while saving the previous one
+function changePreview(dir: 'left' | 'right') {
+	previous_batch = batch_index.value;
+	dir == 'left' ? batch_index.value-- : dir == 'right' ? batch_index.value++ : null;
+}
+
+// Watcher for previewed posts. Hides the left or right button if at the end of the post list
 watch(preview_batch, () => {
 	const prev_end = (batch_index.value - 1)*batch_size.value + batch_size.value;
 	const next_start = (batch_index.value + 1)*batch_size.value;
@@ -83,8 +90,10 @@ let previous_post: string = nopost.value.url_name;
 const selected_post: Ref<Post, any> = nopost;
 
 // Change the hash of the URL
-function changeHash(url_name: string) {
-		location.hash = url_name;
+function changeHash(url_name: string, event: Event) {
+	// If the pressed key is Space or Enter, continue
+	if (event instanceof KeyboardEvent && !(event.key == 'Enter')) { return	};
+	location.hash = url_name;
 }
 
 // Change display
@@ -117,7 +126,8 @@ onMounted(async () => {
 // Get this component's stylesheet
 let stylesheet: CSSStyleSheet | undefined = undefined;
 
-function setTransitionDirection(_element: any) {
+// Runs before post change. Sets the direction of the transition
+function setPostTransitionDirection(_element: any) {
 	// If the stylesheet wasn't found, don't try to alter it
 	if (!(stylesheet instanceof CSSStyleSheet)) { return };
 
@@ -125,7 +135,7 @@ function setTransitionDirection(_element: any) {
 	let oldIndex = posts.value.findIndex((val, _ind, _arr) => {	return val.url_name == previous_post });
 	let newIndex = posts.value.findIndex((val, _ind, _arr) => { return val.url_name == selected_post.value.url_name });
 
-	// Depending on the relative indices, change the direction of the animation
+	// Depending on the relative indices, change the direction of the transition
 	if (oldIndex > newIndex) {
 		replaceCSSRule(stylesheet, ".shown_post-enter-from", "transform: translateX(-100vw);");
 		replaceCSSRule(stylesheet, ".shown_post-leave-to", "transform: translateX(100vw);");
@@ -134,16 +144,32 @@ function setTransitionDirection(_element: any) {
 		replaceCSSRule(stylesheet, ".shown_post-leave-to", "transform: translateX(-100vw);");
 	}
 }
+// Runs before preview batch change. Sets the direction of the transition
+function setPreviewTransitionDirection(_element: any) {
+	// If the stylesheet wasn't found, don't try to alter it
+	if (!(stylesheet instanceof CSSStyleSheet)) { return };
+
+	// Depending on the relative indices, change the direction of the transition
+	if (previous_batch > batch_index.value) {
+		replaceCSSRule(stylesheet, ".preview-enter-from", "transform: translateX(-35vw);");
+		replaceCSSRule(stylesheet, ".preview-leave-to", "transform: translateX(100vw);");
+	} else if (previous_batch < batch_index.value) {
+		replaceCSSRule(stylesheet, ".preview-enter-from", "transform: translateX(100vw);");
+		replaceCSSRule(stylesheet, ".preview-leave-to", "transform: translateX(-35vw);");
+	}
+}
 
 </script>
 
 <template>
 	<div id="post_selector">
-		<button class="more_button" id="selector_left" @click="batch_index--">&#9664</button>
-		<blog-preview v-for="post in preview_batch" :post="post" :key="post.url_name" @click="changeHash(post.url_name)" />
-		<button class="more_button" id="selector_right" @click="batch_index++">&#9654</button>
+		<button class="more_button" id="selector_left" @click="changePreview('left')">&#9664</button>
+		<TransitionGroup name="preview" @before-leave="setPreviewTransitionDirection">
+			<blog-preview v-for="post in preview_batch" :post="post" :key="post.url_name" tabindex="0" @click="changeHash(post.url_name, $event)" @keydown="changeHash(post.url_name, $event)" />
+		</TransitionGroup>
+		<button class="more_button" id="selector_right" @click="changePreview('right')">&#9654</button>
 	</div>
-	<Transition id="shown_post" name="shown_post" mode="out-in" @before-leave="setTransitionDirection">
+	<Transition id="shown_post" name="shown_post" mode="out-in" @before-leave="setPostTransitionDirection">
 		<blog-post :post="selected_post" :key="selected_post.url_name" />
 	</Transition>
 </template>
@@ -176,5 +202,19 @@ function setTransitionDirection(_element: any) {
 }
 .shown_post-leave-to {
 	transform: translateX(100vw);
+}
+.preview-move,
+.preview-enter-active,
+.preview-leave-active {
+	transition: all .25s ease;
+}
+.preview-enter-from {
+	transform: translateX(100vw);
+}
+.preview-leave-to {
+	transform: translateX(-35vw);
+}
+.preview-leave-active {
+	position: absolute;
 }
 </style>

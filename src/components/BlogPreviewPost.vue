@@ -50,8 +50,6 @@ const props = defineProps({
 }
 #post_selector>.post_preview:hover {
 		transform: scale(1.05, 1.05);
-		background-color: var(--blog_preview_post_hover_color);
-		transition-duration: .5s;
 }
 
 @media (prefers-color-scheme: light) {
