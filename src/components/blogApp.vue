@@ -151,11 +151,11 @@ function setPreviewTransitionDirection(_element: any) {
 
 	// Depending on the relative indices, change the direction of the transition
 	if (previous_batch > batch_index.value) {
-		replaceCSSRule(stylesheet, ".preview-enter-from", "transform: translateX(-35vw);");
+		replaceCSSRule(stylesheet, ".preview-enter-from", "transform: translateX(-100vw);");
 		replaceCSSRule(stylesheet, ".preview-leave-to", "transform: translateX(100vw);");
 	} else if (previous_batch < batch_index.value) {
 		replaceCSSRule(stylesheet, ".preview-enter-from", "transform: translateX(100vw);");
-		replaceCSSRule(stylesheet, ".preview-leave-to", "transform: translateX(-35vw);");
+		replaceCSSRule(stylesheet, ".preview-leave-to", "transform: translateX(-100vw);");
 	}
 }
 
@@ -212,7 +212,7 @@ function setPreviewTransitionDirection(_element: any) {
 	transform: translateX(100vw);
 }
 .preview-leave-to {
-	transform: translateX(-35vw);
+	transform: translateX(-100vw);
 }
 .preview-leave-active {
 	position: absolute;
