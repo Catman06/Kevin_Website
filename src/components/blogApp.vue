@@ -9,7 +9,7 @@ const getPosts = async () => loadPosts('load');
 // ref to the array of all posts
 const posts: Ref<Post[], any> = ref([]);
 // 'Post' to display when no post is selected
-const nopost = ref(new Post("", "0", "NoPost", "Select a post", "", new DocumentFragment, ""));
+const nopost = ref(new Post("", "0", ["NoPost"], "Select a post", "", new DocumentFragment, ""));
 // How many posts to preview at once
 const batch_size = ref(1);
 

@@ -10,10 +10,10 @@ export class Post {
 	content: DocumentFragment;
 	stylesheet: string;
 
-	constructor(url_name: string, publish_time: string, category: string[], title: string, blurb: string, content: DocumentFragment, style: string) {
+	constructor(url_name: string, publish_time: string, categories: string[], title: string, blurb: string, content: DocumentFragment, style: string) {
 		this.url_name = url_name;
 		this.publish_time = new Date(`${publish_time}`);
-		this.categories = category;
+		this.categories = categories;
 		this.title = title;
 		this.content = content;
 		this.blurb = blurb;
@@ -30,15 +30,15 @@ export class Post {
 }
 
 // A function that returns a promise of an array of Posts
-// load loads already stored posts, recheck also gets any new posts, and refetch downloads all posts
+// load loads already stored posts, recheck also gets any new posts, and re-fetch downloads all posts
 export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load'): Promise<Post[]> {
 	// Array of all posts' names
 	let filenames: string[] = [];
 	// Array of all posts as Post objects
 	let post_posts: Post[] = [];
 	const last_fetch = sessionStorage.getItem('LastFetch');
-	// If the storage hasn't been updated in the last hour, check for new posts. If no lastFetch was found, recheck
-	// If the storage hasn't been updated in the last 12 hours, refresh. If no lastFetch was found, refetch
+	// If the storage hasn't been updated in the last hour, check for new posts. If no LastFetch was found, recheck
+	// If the storage hasn't been updated in the last 12 hours, refresh. If no LastFetch was found, re-fetch
 	const time_since = Date.now() - parseInt(last_fetch ? last_fetch : '0')
 	if (time_since > 3600000) {
 		task = 'recheck';
@@ -86,18 +86,18 @@ export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load'): 
 			const parser = new DOMParser();
 			let content = new DocumentFragment;
 			content.append(parser.parseFromString(obj_post.content, 'text/html').body);
-			post_posts.push(new Post(obj_post.url_name, obj_post.publish_time, obj_post.category, obj_post.title, obj_post.blurb, content, obj_post.stylesheet));
+			post_posts.push(new Post(obj_post.url_name, obj_post.publish_time, obj_post.categories, obj_post.title, obj_post.blurb, content, obj_post.stylesheet));
 		}
 	} catch (error) {
 		// On error, report it and clear 'LastFetch' so that new copies of the posts are gotten next time
 		console.error('Error parsing stored files', error);
 		sessionStorage.removeItem('LastFetch');
 	}
-
+	
 	return post_posts;
 }
 
-// Downloads the passed urls and parses them into session storage
+// Downloads the passed URLs and parses them into session storage
 async function downloadPosts(file_paths: string[]): Promise<void> {
 	// Array of all posts as Post objects
 	let post_posts: Post[] = [];
@@ -148,7 +148,7 @@ async function downloadPosts(file_paths: string[]): Promise<void> {
 					case "date":
 						date = tag.content;
 						break;
-					case "category":
+					case "categories":
 						categories = tag.content.split(",");
 						break;
 					case "title":
