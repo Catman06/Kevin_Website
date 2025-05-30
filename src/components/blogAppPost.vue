@@ -12,7 +12,7 @@ const loaded = ref(false);
 // Get the element for where the content should go
 let content_spot: HTMLElement | null;
 onMounted(() => {
-	if (props.post.category == "NoPost") {
+	if (props.post.categories.includes("NoPost")) {
 		loaded.value = false;
 		return;
 	} else {
@@ -47,7 +47,9 @@ onMounted(() => {
 	<div id="post_header">
 		<h1 id="post_title">{{ post.title }}</h1>
 		<h2 id="post_date" v-if="loaded">{{ post.getPublishDate() }}</h2>
-		<h2 id="post_category" v-if="loaded">{{ post.category }}</h2>
+		<div id="post_categories" v-if="loaded">
+			<div class="post_category" v-for="category in post.categories">{{ category }}</div>
+		</div>
 	</div>
 	<p id="post_blurb">{{ post.blurb }}</p>
 	<div id="post_content" class="clearfix"></div>
@@ -58,7 +60,8 @@ onMounted(() => {
 <style lang="css">
 #blog_post {
 	--blog_post_background_color: #121612;
-	--blog_post_header_color: #202920;
+	--blog_post_header_background_color: #202920;
+	--blog_post_category_background_color: #3b4d3b;
 	background-color: var(--blog_post_background_color);
 	border-radius: 25px;
 	margin: 5px;
@@ -68,13 +71,19 @@ onMounted(() => {
 	text-align: center;
 	& #post_header {
 		margin-bottom: 1rem;
-		background-color: var(--blog_post_header_color);
+		background-color: var(--blog_post_header_background_color);
 		padding: .5rem;
 		border-radius: 1rem;
 		
 		& h1 {
 			display:block;
 			font-size: 2rem;
+		}
+
+		& .post_category {
+			background-color: var(--blog_post_category_background_color);
+			border-radius: 1em;
+			padding: .1rem 1ch;
 		}
 
 		& * {
@@ -100,7 +109,7 @@ onMounted(() => {
 @media (prefers-color-scheme: light) {
 	#blog_post {
 		--blog_post_background_color: #b0cab0;
-		--blog_post_header_color: #81b981;		
+		--blog_post_header_background_color: #81b981;		
 	}
 }
 </style>

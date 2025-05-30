@@ -4,19 +4,19 @@ import type { Ref } from "vue";
 export class Post {
 	url_name: string;
 	publish_time: Date;
-	category: string;
+	categories: string[];
 	title: string;
 	blurb: string;
 	content: DocumentFragment;
 	stylesheet: string;
 
-	constructor(url_name: string, publish_time: string, category: string, title: string, blurb: string, content: DocumentFragment, style: string) {
+	constructor(url_name: string, publish_time: string, category: string[], title: string, blurb: string, content: DocumentFragment, style: string) {
 		this.url_name = url_name;
 		this.publish_time = new Date(`${publish_time}`);
-		this.category = category;
+		this.categories = category;
 		this.title = title;
-		this.blurb = blurb;
 		this.content = content;
+		this.blurb = blurb;
 		this.stylesheet = style;
 	}
 
@@ -141,21 +141,21 @@ async function downloadPosts(file_paths: string[]): Promise<void> {
 		// For each provided Document, add a Post to post_posts
 		for (const post_document of post_html_docs) {
 			const tag_list = post_document.getElementsByTagName("meta");
-			let date: string = '', category: string = '', title: string = '', blurb: string = '', content: DocumentFragment = new DocumentFragment, stylesheet: string = '';
+			let date: string = '', categories: string[] = [], title: string = '', blurb: string = '', content: DocumentFragment = new DocumentFragment, stylesheet: string = '';
 			// For each meta tag, get it's name and apply it's content to the corresponding variable
 			for (const tag of tag_list) {
 				switch (tag.name) {
 					case "date":
-						date = tag.content
+						date = tag.content;
 						break;
 					case "category":
-						category = tag.content
+						categories = tag.content.split(",");
 						break;
 					case "title":
-						title = tag.content
+						title = tag.content;
 						break;
 					case "blurb":
-						blurb = tag.content
+						blurb = tag.content;
 						break;			
 					default:
 						break;
@@ -174,7 +174,7 @@ async function downloadPosts(file_paths: string[]): Promise<void> {
 			}
 
 			// Apply all the gathered variables into a new Post and return it and store the post in Session Storage
-			let newPost = new Post(file_paths[index], date, category, title, blurb, content, stylesheet)
+			let newPost = new Post(file_paths[index], date, categories, title, blurb, content, stylesheet)
 			sessionStorage.setItem(file_paths[index], JSON.stringify(newPost, (key, value) => {
 				let serializer = new XMLSerializer;
 				// If the key is 'content' and if value.firstChild isn't null, serialize and return value.firstChild

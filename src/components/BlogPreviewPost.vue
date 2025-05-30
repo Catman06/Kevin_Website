@@ -9,8 +9,13 @@ const props = defineProps({
 <template>
 <div class="post_preview">
 	<div>
-		<h3 class="preview_title">{{ post.title }}</h3>
-		<h6 class="preview_date">{{ post.getPublishDate() }}</h6>
+		<h2 class="preview_title">{{ post.title }}</h2>
+		<div class="preview_subtitle">
+			<h3 class="preview_date">{{ post.getPublishDate() }}</h3>
+			<div class="preview_categories">
+				<div class="preview_category" v-for="category in post.categories">{{ category }}</div>
+			</div>
+		</div>
 	</div>
 	<p class="preview_blurb">{{ post.blurb }}</p>
 </div>	
@@ -20,6 +25,8 @@ const props = defineProps({
 .post_preview {
 	--blog_preview_post_background_color: #131b13;
 	--blog_preview_post_hover_color: #213021;
+	--blog_preview_subtitle_background_color: #2d3d2d;
+	--blog_preview_category_background_color: #425a42;
 	border-radius: 25px;
 	background-color: var(--blog_preview_post_background_color);
 	padding: 10px;
@@ -28,11 +35,35 @@ const props = defineProps({
 
 	& .preview_title {
 		margin: 0px;
+		font-size: 1.25em;
+	}
+	
+	& .preview_subtitle {
+		display: flex;
+		background-color: var(--blog_preview_subtitle_background_color);
+		padding: .2rem;
+		border-radius: .4rem;
+		align-items: center;
+		
+		& .preview_date {
+			margin: 0px 0px 0px 0.1rem;
+			font-size: 0.75em;
+		}
+		
+		& .preview_categories {
+			font-size: 0.75em;
+			display: flex;
+			align-items: center;
+
+			& .preview_category {
+				background-color: var(--blog_preview_category_background_color);
+				border-radius: 1em;
+				margin-left: .5em;
+				padding: .1rem 1ch;
+			}
+		}
 	}
 
-	& .preview_date {
-		margin: 0px;
-	}
 
 	& .preview_content {
 		max-height: 10.4em;
@@ -56,6 +87,8 @@ const props = defineProps({
 	.post_preview {
 		--blog_preview_post_background_color: #86b186;
 		--blog_preview_post_hover_color: #6ea36e;
+		--blog_preview_subtitle_background_color: #678667;
+		--blog_preview_category_background_color: #88a888;
 	}
 }
 </style>
