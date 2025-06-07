@@ -1,12 +1,13 @@
 {
   "name": "new_website",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "cd /srv/http/nginx/ && sudo rm -r assets php *.*; sudo cp -r /home/kevin/Development/new_website/dist/* /srv/http/nginx/"
   },
   "dependencies": {
     "vue": "^3.5.14"

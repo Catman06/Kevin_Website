@@ -51,7 +51,7 @@ export async function loadPosts(task: 'load' | 'recheck' | 'refetch' = 'load'): 
 		sessionStorage.setItem('LastFetch', JSON.stringify(Date.now()));
 		// Try to get the list of posts from the server and add any that are missing from
 		try {
-			const file_paths = await (await fetch("https://kevinserver/src/php/getPosts.php", { method: "get" })).json();
+			const file_paths = await (await fetch("https://zipperserver.duckdns.org/php/getPosts.php", { method: "get" })).json();
 			for (const file of file_paths) {
 				if (file == "EmptyPost") {
 					continue;
@@ -107,7 +107,7 @@ async function downloadPosts(file_paths: string[]): Promise<void> {
 	try {
 		for (const index in file_paths) {
 			console.info(`Fetching post: ${file_paths[index]}`);
-			post_strings.push(await (await fetch(`https://kevinserver/posts/${file_paths[index]}.html`, { method: "get" })).text());
+			post_strings.push(await (await fetch(`https://zipperserver.duckdns.org/posts/${file_paths[index]}.html`, { method: "get" })).text());
 		}
 	} catch (error) {
 		console.error('Error loading posts', error);
