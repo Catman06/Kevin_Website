@@ -110,6 +110,7 @@ onMounted(() => {
 	#blog_post {
 		--blog_post_background_color: #b0cab0;
 		--blog_post_header_background_color: #81b981;		
+		--blog_post_category_background_color: #90c990;
 	}
 }
 </style>
