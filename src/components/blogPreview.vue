@@ -40,7 +40,7 @@ onMounted(async () => {
 #blog_preview_app {
 	--blog_preview_background_color: #3a493a;
 	
-	height: calc(100% - 3rem);
+	/* height: calc(100% - 3rem); */
 	overflow-y: auto;
 	background-color: var(--blog_preview_background_color);
 	border-radius: 1rem;

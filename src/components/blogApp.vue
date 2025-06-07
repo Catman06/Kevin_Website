@@ -183,7 +183,7 @@ function setPreviewTransitionDirection(_element: any) {
 	overflow-x: scroll;
 
 	&>* {
-		height: 8rem;
+		min-height: 8rem;
 	}
 
 	& .more_button {

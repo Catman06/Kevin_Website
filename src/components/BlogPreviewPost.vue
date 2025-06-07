@@ -64,13 +64,17 @@ const props = defineProps({
 		}
 	}
 
-
 	& .preview_content {
 		max-height: 10.4em;
 		line-height: 1.3em;
 		padding: 0rem 1rem;
 		overflow: hidden;
 		text-align: justify;
+	}
+
+	& .preview_blurb {
+		margin-top: .5em;
+		margin-bottom: .25em;
 	}
 }
 
