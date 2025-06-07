@@ -155,7 +155,7 @@ function setPreviewTransitionDirection(_element: any) {
 		replaceCSSRule(stylesheet, ".preview-leave-to", "transform: translateX(100vw);");
 	} else if (previous_batch < batch_index.value) {
 		replaceCSSRule(stylesheet, ".preview-enter-from", "transform: translateX(100vw);");
-		replaceCSSRule(stylesheet, ".preview-leave-to", "transform: translateX(-30vw);");
+		replaceCSSRule(stylesheet, ".preview-leave-to", "transform: translateX(-60vw);");
 	}
 }
 
