@@ -103,6 +103,10 @@ onMounted(() => {
 	& #post_content {
 		text-align: justify;
 		height: fit-content;
+
+		& img {
+			max-width: 100%;
+		}
 	}
 }
 
