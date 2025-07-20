@@ -3,6 +3,22 @@ import { ref, onMounted, type Ref } from 'vue';
 import { loadPosts, sortPosts, Post } from "../ts/post";
 import BlogPreviewPost from './BlogPreviewPost.vue';
 
+// Setup caching service worker
+if ("serviceWorker" in navigator) {
+	navigator.serviceWorker.register(
+		import.meta.env.MODE === 'production' ? 'cacheServiceWorker.js' : 'src/sw/cacheServiceWorker?dev-sw'
+	).then (
+		(registration) => {
+			console.log("Service worker registered: ", registration);
+		},
+		(error) => {
+			console.error(`Service worker registration failed: ${error}`);
+		},
+	);
+} else {
+	console.error("Service workers not supported");
+}
+
 const getPosts = async () => loadPosts('load')
 const posts: Ref<Post[], any> = ref();
 

@@ -1,0 +1,7 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"lib": ["WebWorker", "ES2015"],
+	},
+  "include": ["cacheServiceWorker.ts"]
+}
