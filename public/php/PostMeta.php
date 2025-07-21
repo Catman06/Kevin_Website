@@ -10,7 +10,7 @@ try {
 	preg_match('/<meta name="title".*content="(.+)".*\/>/im', $content, $title);
 	preg_match('/<meta name="blurb".*content="(.+)".*\/>/im', $content, $blurb);
 	// Add all the acquired info fields to the response
-	$response += ["date" => $date[1], "categories" => $categories[1], "title" => $title[1], "blurb" => $blurb[1]];
+	$response += ["date" => $date[1], "categories" => explode(',', $categories[1]), "title" => $title[1], "blurb" => $blurb[1]];
 } catch (Exception $ex) {
 	$response["error"] = $ex;
 }
