@@ -22,10 +22,14 @@ onMounted(() => {
 	if (!content_spot)
 		return
 	// Extract and place the post's content
+	if (!props.post.content)
+		return
 	content_spot ? content_spot.innerHTML = props.post.content.querySelectorAll("body")[0].innerHTML : null
 
 	// Apply Style
 	const stylesheet = document.adoptedStyleSheets.find((stylesheet) => stylesheet.cssRules.item(0)?.cssText == "post_stylesheet { display: none; }");
+	if (!props.post.stylesheet)
+		return
 	if (stylesheet) {
 		stylesheet.replaceSync(props.post.stylesheet);
 		stylesheet.insertRule("post_stylesheet { display: none }", 0);

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref, onMounted, type Ref } from 'vue';
-import { loadPosts, sortPosts, Post } from "../ts/post";
+import { sortPosts, MinPost, getPostList } from "../ts/post";
 import BlogPreviewPost from './BlogPreviewPost.vue';
 
-const getPosts = async () => loadPosts('load')
-const posts: Ref<Post[], any> = ref();
+const getPosts = async () => getPostList();
+const posts: Ref<MinPost[], any> = ref();
 
-function openPost(post: Post, event: Event) {
+function openPost(post: MinPost, event: Event) {
 	// If the pressed key is Space or Enter, continue
 	if (event instanceof KeyboardEvent && !(event.key == 'Enter')) { return	};
 	window.location.assign(`${window.location.origin}/blog.html#${post.url_name}`)
@@ -27,7 +27,7 @@ onMounted(async () => {
 <div id="blog_preview_app">
 		<BlogPreviewPost
 		v-for="post in posts"
-		:post="post"
+		:minpost="post"
 		:key="post.url_name"
 		@click="openPost(post, $event)"
 		@keydown="openPost(post, $event)"
