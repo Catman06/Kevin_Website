@@ -1,7 +1,8 @@
 <?php
+header("Cache-Control: max-age=86400");
 $response = [];
 try {
-	$filename = json_decode(file_get_contents('php://input'), true)['url'];
+	$filename = $_GET["url"];
 	$path = "/srv/http/nginx/posts/$filename.html";
 	// Get the meta information from the file
 	$content = file_get_contents($path);

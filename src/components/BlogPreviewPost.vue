@@ -1,13 +1,20 @@
 // A component for a single instance of a blog post preview
 <script lang="ts" setup>
-import { Post } from '../ts/post';
+import { onBeforeMount, onUpdated, ref, type Ref } from 'vue';
+import { MinPost, Post, getPostMeta } from '../ts/post';
 const props = defineProps({
-	post: { type: Post, required: true }
+	minpost: { type: MinPost, required: true }
+})
+
+const post: Ref<Post, any> = ref(new Post("", "0", [], "", ""));
+
+onBeforeMount(async () => {
+	post.value = await getPostMeta(props.minpost.url_name);
 })
 </script>
 
 <template>
-<div class="post_preview">
+<div class="post_preview" v-if=post.title>
 	<div>
 		<h2 class="preview_title">{{ post.title }}</h2>
 		<div class="preview_subtitle">

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { ref, onMounted, type Ref, computed, watch } from "vue";
-import { loadPosts, sortPosts, Post } from "../ts/post";
+import { sortPosts, Post, getPostList } from "../ts/post";
 import { getStyleSheet, replaceCSSRule } from "../ts/cssManip";
 import BlogPreview from './BlogPreviewPost.vue';
 import BlogPost from "./blogAppPost.vue";
 
-const getPosts = async () => loadPosts('load');
+const getPosts = async () => getPostList();
 // ref to the array of all posts
 const posts: Ref<Post[], any> = ref([]);
 // 'Post' to display when no post is selected
@@ -165,7 +165,7 @@ function setPreviewTransitionDirection(_element: any) {
 	<div id="post_selector">
 		<button class="more_button" id="selector_left" @click="changePreview('left')">&#9664</button>
 		<TransitionGroup name="preview" @before-leave="setPreviewTransitionDirection">
-			<blog-preview v-for="post in preview_batch" :post="post" :key="post.url_name" tabindex="0" @click="changeHash(post.url_name, $event)" @keydown="changeHash(post.url_name, $event)" />
+			<blog-preview v-for="post in preview_batch" :minpost="post" :key="post.url_name" tabindex="0" @click="changeHash(post.url_name, $event)" @keydown="changeHash(post.url_name, $event)" />
 		</TransitionGroup>
 		<button class="more_button" id="selector_right" @click="changePreview('right')">&#9654</button>
 	</div>
