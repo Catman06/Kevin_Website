@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref, onMounted, type Ref, computed, watch } from "vue";
-import { sortPosts, Post, getPostList } from "../ts/post";
+import { sortPosts, Post, getPostList, MinPost, getPostContent } from "../ts/post";
 import { getStyleSheet, replaceCSSRule } from "../ts/cssManip";
 import BlogPreview from './BlogPreviewPost.vue';
 import BlogPost from "./blogAppPost.vue";
 
 const getPosts = async () => getPostList();
 // ref to the array of all posts
-const posts: Ref<Post[], any> = ref([]);
+const posts: Ref<MinPost[], any> = ref([]);
 // 'Post' to display when no post is selected
 const nopost = ref(new Post("", "0", ["NoPost"], "Select a post", "", new DocumentFragment, ""));
 // How many posts to preview at once
@@ -39,7 +39,7 @@ let previous_batch = 0;
 // What group of posts to preview
 const batch_index = ref(0);
 // The previewed posts
-const preview_batch: Ref<Post[], any> = computed(() => {
+const preview_batch: Ref<MinPost[], any> = computed(() => {
 	const start = batch_index.value*batch_size.value;
 	const end = start + batch_size.value;
 	
@@ -101,11 +101,11 @@ addEventListener("hashchange", (event) => {
 event.newURL == event.oldURL ? null : displayPost(location.hash.slice(1));
 })
 
-function displayPost(url_name: string) {
+async function displayPost(url_name: string) {
 	for (const post of posts.value) {
 		if (post.url_name == url_name) {
 			previous_post = selected_post.value.url_name;
-			selected_post.value = post;
+			selected_post.value = await getPostContent(post.url_name);
 		}
 	}
 }

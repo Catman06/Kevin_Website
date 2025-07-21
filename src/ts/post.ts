@@ -64,8 +64,8 @@ export async function getPostMeta(url_name: string): Promise<Post> {
 }
 
 // Returns a Promise for the passed Post with the main content added
-export async function getPostContent(post: Post): Promise<Post> {
-	let response = await (await fetch(`/posts/${post.url_name}.html`, { method: "get" })).text();
+export async function getPostContent(url_name: string): Promise<Post> {
+	let response = await (await fetch(`/posts/${url_name}.html`, { method: "get" })).text();
 	// Turn the strings in post_strings into HTMLDocuments
 	let html_doc;
 	try {
@@ -75,10 +75,30 @@ export async function getPostContent(post: Post): Promise<Post> {
 		console.error('Error parsing String to HTML', error);
 	}
 
-	// Get the body of the content and put into a DocumentFragment
-	let content = new DocumentFragment
-	let stylesheet = "";
+	// Take all the data from the html document and put it into a Post
+	let date: string = '', categories: string[] = [], title: string = '', blurb: string = '', content: DocumentFragment = new DocumentFragment, stylesheet: string = '';
 	if (html_doc) {
+		const tag_list = html_doc.getElementsByTagName("meta");
+		// For each meta tag, get it's name and apply it's content to the corresponding variable
+		for (const tag of tag_list) {
+			switch (tag.name) {
+				case "date":
+					date = tag.content;
+					break;
+				case "categories":
+					categories = tag.content.split(",");
+					break;
+				case "title":
+					title = tag.content;
+					break;
+				case "blurb":
+					blurb = tag.content;
+					break;			
+				default:
+					break;
+			}
+		}
+		// Get the body of the content and put into a DocumentFragment
 		const body = html_doc.body;
 		content.appendChild(body);
 		
@@ -91,10 +111,7 @@ export async function getPostContent(post: Post): Promise<Post> {
 	}
 
 	// Add the newly acquired content and style to the passed post
-	post.content = content;
-	post.stylesheet = stylesheet;
-
-	return post;
+	return new Post(url_name, date, categories, title, blurb, content, stylesheet);
 }
 
 // // A function that returns a promise of an array of Posts
