@@ -60,6 +60,7 @@ onBeforeMount(async () => {
 		& .preview_categories {
 			font-size: 0.75em;
 			display: flex;
+			flex-wrap: wrap;
 			align-items: center;
 
 			& .preview_category {

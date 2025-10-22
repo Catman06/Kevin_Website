@@ -1,3 +1,4 @@
+// Main component for the primary blog display
 <script lang="ts" setup>
 import { ref, onMounted, type Ref, computed, watch } from "vue";
 import { sortPosts, Post, getPostList, MinPost, getPostContent } from "../ts/post";
