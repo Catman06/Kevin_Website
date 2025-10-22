@@ -1,5 +1,8 @@
 import type { Ref } from "vue";
 
+// Set the base of the URL for PHP scripts
+const baseURL = import.meta.env.DEV ? "https://kevinserver" : "https://zipperserver.duckdns.org";
+
 export class MinPost {
 	url_name: string;
 	publish_date: Date;
@@ -45,7 +48,7 @@ export class Post {
 
 // Returns a Promise for the list of available posts
 export async function getPostList(): Promise<MinPost[]> {
-	let response = await (await fetch("/php/PostList.php", { method: "get" })).json();
+	let response = await (await fetch(`${baseURL}/php/PostList.php`, { method: "get" })).json();
 
 	// Create an array of MinPosts from the response
 	let posts: MinPost[] = [];
@@ -59,13 +62,13 @@ export async function getPostList(): Promise<MinPost[]> {
 
 // Returns a Promise for a Post with only the non-content parts of a post
 export async function getPostMeta(url_name: string): Promise<Post> {
-	return await (await fetch(`/php/PostMeta.php?url=${url_name}`, { method: "get" })).json()
+	return await (await fetch(`${baseURL}/php/PostMeta.php?url=${url_name}`, { method: "get" })).json()
 	.then(response => new Post(url_name, response.date, response.categories, response.title, response.blurb));
 }
 
 // Returns a Promise for the passed Post with the main content added
 export async function getPostContent(url_name: string): Promise<Post> {
-	let response = await (await fetch(`/posts/${url_name}.html`, { method: "get" })).text();
+	let response = await (await fetch(`${baseURL}/posts/${url_name}.html`, { method: "get" })).text();
 	// Turn the strings in post_strings into HTMLDocuments
 	let html_doc;
 	try {
@@ -112,6 +115,22 @@ export async function getPostContent(url_name: string): Promise<Post> {
 
 	// Add the newly acquired content and style to the passed post
 	return new Post(url_name, date, categories, title, blurb, content, stylesheet);
+}
+
+export function sortPosts(posts: Ref<MinPost[]>, sort: string = 'DateDes'): void {
+	switch (sort) {
+		case 'DateAsc':
+			posts.value.sort((a, b) => { return a.getTimeCode() - b.getTimeCode(); });
+			break;
+		case 'DateDes':
+			posts.value.sort((a, b) => { 
+				return b.getTimeCode() - a.getTimeCode();
+			});
+			break;
+	
+		default:
+			break;
+	}
 }
 
 // // A function that returns a promise of an array of Posts
@@ -273,19 +292,3 @@ export async function getPostContent(url_name: string): Promise<Post> {
 // 		sessionStorage.removeItem('LastFetch');
 // 	}
 // }
-
-export function sortPosts(posts: Ref<MinPost[]>, sort: string = 'DateDes'): void {
-	switch (sort) {
-		case 'DateAsc':
-			posts.value.sort((a, b) => { return a.getTimeCode() - b.getTimeCode(); });
-			break;
-		case 'DateDes':
-			posts.value.sort((a, b) => { 
-				return b.getTimeCode() - a.getTimeCode();
-			});
-			break;
-	
-		default:
-			break;
-	}
-}
