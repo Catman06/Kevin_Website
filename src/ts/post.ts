@@ -1,136 +1,181 @@
 import type { Ref } from "vue";
 
 // Set the base of the URL for PHP scripts
-const baseURL = import.meta.env.DEV ? "https://kevinserver" : "http://kevinkamasaki.com";
+const baseURL = import.meta.env.DEV
+  ? "https://kevinserver"
+  : "https://kevinkamasaki.com";
 
 export class MinPost {
-	url_name: string;
-	publish_date: Date;
+  url_name: string;
+  publish_date: Date;
 
-	constructor(url_name: string, publish_date: string) {
-		this.url_name = url_name;
-		this.publish_date = new Date(`${publish_date}`);
-	}
+  constructor(url_name: string, publish_date: string) {
+    this.url_name = url_name;
+    this.publish_date = new Date(`${publish_date}`);
+  }
 
-	getTimeCode(): number {
-		return this.publish_date.valueOf();
-	}
+  getTimeCode(): number {
+    return this.publish_date.valueOf();
+  }
 }
 
 // A class to hold all the data for a post
 export class Post {
-	url_name: string;
-	publish_date: Date;
-	categories: string[];
-	title: string;
-	blurb: string;
-	content: DocumentFragment | null;
-	stylesheet: string | null;
+  url_name: string;
+  publish_date: Date;
+  categories: string[];
+  title: string;
+  blurb: string;
+  content: DocumentFragment | null;
+  stylesheet: string | null;
 
-	constructor(url_name: string, publish_date: string, categories: string[], title: string, blurb: string, content?: DocumentFragment, style?: string) {
-		this.url_name = url_name;
-		this.publish_date = new Date(`${publish_date}`);
-		this.categories = categories;
-		this.title = title;
-		this.blurb = blurb;
-		this.content = content ? content : null;
-		this.stylesheet = style ? style : null;
-	}
+  constructor(
+    url_name: string,
+    publish_date: string,
+    categories: string[],
+    title: string,
+    blurb: string,
+    content?: DocumentFragment,
+    style?: string,
+  ) {
+    this.url_name = url_name;
+    this.publish_date = new Date(`${publish_date}`);
+    this.categories = categories;
+    this.title = title;
+    this.blurb = blurb;
+    this.content = content ? content : null;
+    this.stylesheet = style ? style : null;
+  }
 
-	getPublishDate(): string {
-		return this.publish_date.toLocaleDateString();
-	}
+  getPublishDate(): string {
+    return this.publish_date.toLocaleDateString();
+  }
 
-	getTimeCode(): number {
-		return this.publish_date.valueOf();
-	}
+  getTimeCode(): number {
+    return this.publish_date.valueOf();
+  }
 }
 
 // Returns a Promise for the list of available posts
 export async function getPostList(): Promise<MinPost[]> {
-	let response = await (await fetch(`${baseURL}/php/PostList.php`, { method: "get" })).json();
+  let response = await (
+    await fetch(`${baseURL}/php/PostList.php`, { method: "get" })
+  ).json();
 
-	// Create an array of MinPosts from the response
-	let posts: MinPost[] = [];
-	for (const item of response) {
-		if (item.date)
-			posts.push(new MinPost(item.name, item.date));
-	}
+  // Create an array of MinPosts from the response
+  let posts: MinPost[] = [];
+  for (const item of response) {
+    if (item.date) posts.push(new MinPost(item.name, item.date));
+  }
 
-	return posts;
+  return posts;
 }
 
 // Returns a Promise for a Post with only the non-content parts of a post
 export async function getPostMeta(url_name: string): Promise<Post> {
-	return await (await fetch(`${baseURL}/php/PostMeta.php?url=${url_name}`, { method: "get" })).json()
-	.then(response => new Post(url_name, response.date, response.categories, response.title, response.blurb));
+  return await (
+    await fetch(`${baseURL}/php/PostMeta.php?url=${url_name}`, {
+      method: "get",
+    })
+  )
+    .json()
+    .then(
+      (response) =>
+        new Post(
+          url_name,
+          response.date,
+          response.categories,
+          response.title,
+          response.blurb,
+        ),
+    );
 }
 
 // Returns a Promise for the passed Post with the main content added
 export async function getPostContent(url_name: string): Promise<Post> {
-	let response = await (await fetch(`${baseURL}/posts/${url_name}.html`, { method: "get" })).text();
-	// Turn the strings in post_strings into HTMLDocuments
-	let html_doc;
-	try {
-		const parser = new DOMParser();
-		html_doc = parser.parseFromString(response, "text/html");
-	} catch (error) {
-		console.error('Error parsing String to HTML', error);
-	}
+  let response = await (
+    await fetch(`${baseURL}/posts/${url_name}.html`, { method: "get" })
+  ).text();
+  // Turn the strings in post_strings into HTMLDocuments
+  let html_doc;
+  try {
+    const parser = new DOMParser();
+    html_doc = parser.parseFromString(response, "text/html");
+  } catch (error) {
+    console.error("Error parsing String to HTML", error);
+  }
 
-	// Take all the data from the html document and put it into a Post
-	let date: string = '', categories: string[] = [], title: string = '', blurb: string = '', content: DocumentFragment = new DocumentFragment, stylesheet: string = '';
-	if (html_doc) {
-		const tag_list = html_doc.getElementsByTagName("meta");
-		// For each meta tag, get it's name and apply it's content to the corresponding variable
-		for (const tag of tag_list) {
-			switch (tag.name) {
-				case "date":
-					date = tag.content;
-					break;
-				case "categories":
-					categories = tag.content.split(",");
-					break;
-				case "title":
-					title = tag.content;
-					break;
-				case "blurb":
-					blurb = tag.content;
-					break;
-				default:
-					break;
-			}
-		}
-		// Get the body of the content and put into a DocumentFragment
-		const body = html_doc.body;
-		content.appendChild(body);
+  // Take all the data from the html document and put it into a Post
+  let date: string = "",
+    categories: string[] = [],
+    title: string = "",
+    blurb: string = "",
+    content: DocumentFragment = new DocumentFragment(),
+    stylesheet: string = "";
+  if (html_doc) {
+    const tag_list = html_doc.getElementsByTagName("meta");
+    // For each meta tag, get it's name and apply it's content to the corresponding variable
+    for (const tag of tag_list) {
+      switch (tag.name) {
+        case "date":
+          date = tag.content;
+          break;
+        case "categories":
+          categories = tag.content.split(",");
+          break;
+        case "title":
+          title = tag.content;
+          break;
+        case "blurb":
+          blurb = tag.content;
+          break;
+        default:
+          break;
+      }
+    }
+    // Get the body of the content and put into a DocumentFragment
+    const body = html_doc.body;
+    content.appendChild(body);
 
-		// Get and store style data
-		const style = html_doc.getElementsByTagName("style")[0];
-		stylesheet = style.innerHTML;
-		if (stylesheet === null) {
-			stylesheet = "";
-		}
-	}
+    // Get and store style data
+    const style = html_doc.getElementsByTagName("style")[0];
+    stylesheet = style.innerHTML;
+    if (stylesheet === null) {
+      stylesheet = "";
+    }
+  }
 
-	// Add the newly acquired content and style to the passed post
-	return new Post(url_name, date, categories, title, blurb, content, stylesheet);
+  // Add the newly acquired content and style to the passed post
+  return new Post(
+    url_name,
+    date,
+    categories,
+    title,
+    blurb,
+    content,
+    stylesheet,
+  );
 }
 
-export function sortPosts(posts: Ref<MinPost[]>, sort: string = 'DateDes'): void {
-	switch (sort) {
-		case 'DateAsc':
-			posts.value.sort((a, b) => { return a.getTimeCode() - b.getTimeCode(); });
-			break;
-		case 'DateDes':
-			posts.value.sort((a, b) => {
-				return b.getTimeCode() - a.getTimeCode();
-			});
-			break;
+export function sortPosts(
+  posts: Ref<MinPost[]>,
+  sort: string = "DateDes",
+): void {
+  switch (sort) {
+    case "DateAsc":
+      posts.value.sort((a, b) => {
+        return a.getTimeCode() - b.getTimeCode();
+      });
+      break;
+    case "DateDes":
+      posts.value.sort((a, b) => {
+        return b.getTimeCode() - a.getTimeCode();
+      });
+      break;
 
-		default:
-			break;
-	}
+    default:
+      break;
+  }
 }
 
 // // A function that returns a promise of an array of Posts
