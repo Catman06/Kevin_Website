@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="8/5/2025" />
+		<meta name="categories" content="Web Development,IT,Database" />
+		<meta name="title" content="Warp Chart Database 1" />
+		<meta name="blurb" content="Creating a chart database & interface for my Rogue Trader Campaign" />
+		<style>
+			.imgboxbox {
+				display: flex;
+				justify-content: space-evenly;
+			}
+			.imgbox {
+				background-color: #303030;
+				border-radius: 25px;
+			}
+			.imgbox p {
+				text-align: center;
+			}
+			.imgbox img {
+				height: 22rem;
+			}
+			.heraldry {
+				padding: 2% 1% 0% 1%;
+			}
+			.map img {
+					height: 24rem;
+					background-color: #ffffff;
+					border-radius: 25px 25px 0px 0px;
+			}
+		</style>
+	</head>
+	<body>
+		<p>
+			Recently I started GMing a Warhammer 40K Rogue Trader TTRPG campaign for two of my friends. Since starting, I have made quite a few things for the game
+			beyond the normal GM work: a heraldic achievement for the players' Rogue Trader Dynasty; an SVG version of the very low-res map in the book; and "character"
+			sheets for NPCs, vehicles, and starships. The main focus of this post, however, is my newest project: A database for keeping track of all the charts of
+			warp routes the players	have and a website interface allowing for easy retrieval of the information in those charts.
+		</p>
+		<div class="imgboxbox">
+			<div class="imgbox heraldry">
+				<img src="/posts/assets/Heraldry Valentine.svg" id="heraldry" />
+				<p>The Valentine Dynasty's Heraldry</p>
+			</div>
+			<div class="imgbox map">
+				<img src="/posts/assets/Koronus Expanse Printable.svg" id="map" />
+				<p>Map of the Koronus Expanse</p>
+			</div>
+		</div>
+		<p>
+			At first, the idea was much smaller, I was going to learn how to use <a href="https://www.libreoffice.org/discover/base/">LibreOffice Base</a>, LibreOffice's
+			desktop database front end, and use it's built-in HSQL database. I did use it to enter all the warp routes, but the methods for looking at the data weren't
+			really great in this use case as far as I could tell. So, I exported the database to a CSV and copied it onto the server, where I made a new
+			<a href="https://www.postgresql.org/">PostgreSQL</a> database. Finally I copied all the data into the new database via the COPY command, and got to work
+			building a custom front end. I am using Vite and Vue for the website front end, since they work well and I'm familiar with them.
+		</p>
+		<p>
+			The front end, at its most basic, needs to fulfill two roles: viewing existing charts and adding new ones. To start with, I have focused on viewing them, as
+			it's the more important of the two. Currently, there is a form with two inputs: one for starting location and one for ending location. When neither one is filled,
+			both will provide suggestions from all locations in the database, retrieved when the site loads. If one of the inputs has something in it, when the other is
+			focused it will retrieve and suggest connections either to or from the location in the other input, depending on whether it is the start or end input. The direction
+			matters because warp routes are uni-directional	so the route from A to B is separate from the B to A route. When the "Get Charts" button is pressed the server
+			will return charts based on what data was provided. If no start or end were specified, all charts are returned; if just the start or end were provided, any
+			connections to that start or endpoint are returned; if both the start and end are provided, that chart is returned.
+		</p>
+		<p>
+			Additionally, I figured out how to implement an animated glitchy filter over the top of everything, like it's being viewed on an old dataslate. I might add more
+			effects	as I figure them out, but getting it to this point took quite a while. To place an SVG filter, you should only have to define it in an SVG file, and
+			point the CSS to it, but, unfortunately that didn't work, presumably due to Vite or Vue. Instead, I eventually found a way to place the filter inline in the
+			CSS in <a href="https://www.stefanjudis.com/today-i-learned/svgs-filters-can-be-inlined-in-css/">this blog</a>. Further animating it wasn't too difficult, as
+			there is a way to do that with native SVG using the "animate" tag. Currently the glitchy filter uses turbulence generated almost all on the x-axis to displace
+			a line of pixels a bit with the turbulence's baseFrequency being animated really slowly.
+		</p>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="5/23/2025" />
+		<meta name="categories" content="Web Development" />
+		<meta name="title" content="Making A New Website 2" />
+		<meta name="blurb" content="Struggles with getting php working again." />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>Work on the actual website hit a major stumbling block today, as I realized that my previous method
+			for getting the paths to the post files wasn't going to work as I hoped. Turns out, that using Vite's
+			glob import was building and storing the files, obviously in hindsight, that's the point of the function.
+			However this is not what I wanted, so I decided to dive back into PHP for getting the list of files.
+			Writing the php was easy enough, php.net has very comprehensive documentation. The issue was making PHP
+			work at all. At some point I had updated php.ini, and foolishly put in the date.timezone wrong. I didn't
+			immediately notice the issue as I wasn't regularly checking any of the pages that used php. However I
+			noticed today.
+		</p>
+		<p>
+			Now if you put an invalid value into php.ini, it doesn't (as far as I found) print any kind of error, 
+			what it does do, is make it so that php can't find any file, which is a common issue due to webserver
+			misconfiguration. What this meant for me is that I spent the majority of my time trying in vain to fix
+			nginx.conf, which was working fine. On the upside, I did improve and clean it up a bit so not a total
+			loss of time. During this I didn't fully neglect php.ini, I just didn't think to look closely at the
+			timezone, as that had <i>nothing</i> to do with what directories and files php was allowed to look at.
+			Messing with these two files took up most of the day.
+		</p>
+		<p>
+			Eventually I started looking elsewhere, namely, AppArmor. There were some examples of it causing the
+			issue I was seeing, so I started looking into it. After finding audit logs denying php-fpm from accessing
+			the test php file I was using I thought I had it, after hours of searching, I had found the culprit.
+			I disabled the profile to check it was what was causing the issue, and nothing. Same issue, zero change.
+		</p>
+		<p>
+			At this point I was totally lost, I had no leads. So I just started looking at every possible option in
+			php.ini in hopes of finding something incorrectly set, and lo and behold, date.timezone was set incorrectly.
+			I fixed that and now php is working and work on the actual website can resume. Last thing I did today was
+			to make loadPosts() get it's list of posts from getPosts.php. getPosts.php scans the main server's posts
+			directory.
+		</p>
+	</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="5/26/2025" />
+		<meta name="categories" content="Web Development" />
+		<meta name="title" content="Making A New Website 5" />
+		<meta name="blurb" content="Doing the navbar properly this time" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			I have finally decided to rip out the frankly very stupid method of sizing the logo in the navbar that I was using. What was being done involved a JavaScript function
+			running anytime the page was resized and updating css variables for the size of the logo to be the same as the height of the navbar. This wasn't great,
+			as it would flash the logo at full size on loading the page, and the logo would lag behind when scaling the page. It couldn't have been efficient either.
+			The main issue I had before is that I couldn't figure out how to have the text in the links be vertically centered while also having the navbar use a
+			specific height. The navbar needs to be a specific height, and not defined by it's contents, because the image must be given a height that is relative
+			to that of the navbar. If it was just those two elements, everything would be easy, but there are also the links. The links don't scale evenly with em,
+			meaning that at larger or smaller sizes the text in the links would stray from being vertically centered. 
+		</p>
+		<p>
+			I arrived at the previous solution by looking at the site for Vite and seeing that their logo's size was determined by a variable. I assumed that variable
+			was being defined in JavaScript and so began trying to implement that myself. In the end, it took quite a lot of work figuring out how to interact with
+			CSS rules from JavaScript and ended up not working great anyway. Since I had spent so long making it work I hadn't touched it for a while, however today
+			I looked at the built site and noticed the JavaScript wasn't working, I managed to fix the issue with finding the right stylesheet, but felt that the whole
+			concept was way too much for what I was trying to do so I set about finding a good way to scale the navbar in just CSS. 
+		</p>
+		<p>
+			Ultimately, the solution I reached is very simple, make a variable to hold the desired height of the navbar, set the logo_holder and links to be 100% of that,
+			and then set the links' line-height to the navbar's height. I honestly don't know why I didn't come up with something like this initially! It's much easier
+			than using JavaScript to change variables, and far more effective as well.
+		</p>
+	</body>
+</html>

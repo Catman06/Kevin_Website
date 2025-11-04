@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="8/7/2025" />
+		<meta name="categories" content="Web Development,IT,Database" />
+		<meta name="title" content="Warp Chart Database 2" />
+		<meta name="blurb" content="Allowing new charts to be added and more" />
+		<style>
+
+		</style>
+	</head>
+	<body>
+		<p>
+			Over the past two days I have worked to add the ability to add new charts to the database from the site and to make the site look like it
+			came from the 41st millennium. I have spent far more time making everything work in a visual sense than I needed to make the site function
+			correctly. There were a few particular issues with the glitch filter over everything that must be worked around.
+		</p>
+		<p>
+			Implementing the ability to add new charts wasn't that hard to set up. Just a modal with a form that has all the requisite inputs/textareas
+			for the database's columns and some PHP to insert the data into the database. The only places I ran into difficulty was with getting it
+			positioned correctly and keeping the overflow from the textareas hidden. Turns out they had the same root cause...
+		</p>
+		<p>
+			The glitchy filter over the website is really neat and, in my opinion, is a big part of the feel of this new site. There are some serious
+			problems with having a filter over almost all elements of a website, however. As I eventually found out, filters create new bounding boxes
+			for the content within them. This is fine for their intended purpose of affecting an image or a single element, but starts to cause issues
+			when most of your website is bounded by a box that you don't have a way to control.
+		</p>
+		<p>
+			My solution ended up being discovered over the two days and involved a lot of trial and error, testing different ways of positioning elements
+			to see which would play nice with the filter. Ultimately I found that if I placed the filter into a div containing the content of the site,
+			but not the navbar as that is meant to represent a physical element of the cogitator, that helped. The real challenge was the modal for
+			inputting new charts. That needed to be positioned "fixed" so that it could sit in front of everything else, and (I think) because it wasn't
+			seeing the window but rather the filter as the top level bounding box, wasn't placed right. Eventually, by using vh and vw, units representing
+			1% of the screen height and width respectively, I wrangled it into place.
+		</p>
+		<p>
+			While battling the filter's positioning issues, I did add something else. I added the aforementioned navbar to allow for future expansion in
+			what info the site offers. It is styled as a physical panel on the cogitator, rather than an onscreen menu, and as such isn't subject to the
+			glitch effect and can use colors other than green. I also placed a small logo of the dynasty's coat of arms on there, which was it's own
+			struggle to figure out a good method of making the white strokes of the image transparent despite having stuff below them. Masks, as it turns
+			out, work great.
+		</p>
+		<p>
+			Right now the only options on the navbar are the chart interface and a homepage that shows a big green version of the Valentine heraldry. I'm
+			not sure what, if anything, I will add in the future. I would add the history/lore of the dynasty, but I prefer having that in the Google Doc
+			where the players can also edit and add stuff easily. Another thought I had was making use of the database to store info on the star systems
+			and planets the players discover, but I don't have a particularly set idea of what info would be required for that. Additionally, that too
+			would be nice for the players to be able to easily edit and add to.
+		</p>
+		<p>
+			I don't know what my next step with the site is going to be, or if there even will be one. I think the site will work well for its original
+			purpose of giving access to the dynasty's charts and it looks good doing it, so I might just leave it as is until a new problem shows up.
+		</p>
+	</body>
+</html>

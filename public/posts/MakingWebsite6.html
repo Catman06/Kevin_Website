@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="5/27/2025" />
+		<meta name="categories" content="Web Development" />
+		<meta name="title" content="Making A New Website 6" />
+		<meta name="blurb" content="Animating posts" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			My goal for today was to introduce animations for posts being displayed using Vue's Transition element. It will allow me to add css transitions
+			to the post that activate whenever the post is changed.
+		</p>
+		<p>
+			The biggest change that needed to happen to facilitate these animation was in the blogAppPost component. Previously, only one component was used,
+			and to change post the Post being passed into it was changed. However, when animating elements, new ones are created to be animated in and the old
+			one is animated out. This meant that the post component needed to be altered to just load the post when it loads, rather than having it switch out
+			it's content. That change mostly resulted in simplified code except for in regards to stylesheets. In order to apply the style set in a post, the
+			component used to create a new stylesheet when it was created, then change the rules in that sheet when the post changed. That no longer works with
+			new components being made every time the post is switched, as it would create a new stylesheet each time, resulting in a bunch of old stylesheets
+			being applied. The new method being used is similar to the old one in that it uses a single stylesheet that gets it's content changed, however it
+			now needs to be reaquired by each new post instance. In order to allow the specific stylesheet to be identified, it gets a rule applied at index 0
+			that won't actually effect any elements. The stylesheets on the document are then searched to find the one that has the rule, the post's style
+			is used to replace all it's rules, and then the identifying rule is re-added to index 0.
+		</p>
+		<p>
+			Having made the animations function basically, I then wanted to have them slide on/off based on the relative position of the two posts in the list.
+			That is to say, if the new post is to the left of the old one, the animation will be of the new post coming in from the left and the old one going
+			off to the right. To accomplish this I eventually figured out that I could change the CSS of the animation classes to have different entering and
+			leaving locations. By setting them based on the post's indices' relative value I could have it animate in the appropriate direction.
+		</p>
+	</body>
+</html>

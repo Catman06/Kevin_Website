@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="7/10/2025" />
+		<meta name="categories" content="Circuitry,Blacksmithing,C" />
+		<meta name="title" content="Making a Blower Controller 3" />
+		<meta name="blurb" content="Realizing my mistake" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			I received and constructed the circuit with the new parts today. With that, there came some good and some bad. The good is that it works.
+			I was able to successfully control the duty cycle of whatever is connected to the circuit with the dial. The bad is that only one TRIAC
+			was operating.
+		</p>
+		<p>
+			The reason only one TRIAC functioned, as I found out, is that with not perfectly equal resistance between the TRIACs, the one with the lowest
+			resistance in it's path will receive most of the current. I thought that it wouldn't be an issue because as stuff heats up they gain more
+			resistance. However, that is not true for semiconductors; they <i>lower</i> their resistance when hot, meaning that the one TRIAC just gets
+			more of the current as it heats up from the current already passing through.
+		</p>
+		<p>
+			My new solution is perhaps what I should have done from the start: get a really big heat sink. The biggest one Digi-Key has for the TO-220 package
+			(the package of the TRIACs I'm using). The new heatsink is rated for 20W at 60°C over ambient, whereas the one I have now are rated for something like 2.5W at
+			the same difference. So hopefully that will be sufficient.
+		</p>
+		<p>
+			In regards to my math last time, I'm fairly sure I got something wrong, as when I did the same calculations for this new heatsink, I got higher
+			temperatures. So I don't know exactly how hot it will get with the new heat sink.
+		</p>
+	</body>
+</html>

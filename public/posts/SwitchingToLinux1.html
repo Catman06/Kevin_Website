@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="10/31/2025" />
+		<meta name="categories" content="IT, Linux" />
+		<meta name="title" content="Switching To Linux/>
+		<meta name="blurb" content="Finally switching over from Windows to Linux" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			I'm finally making the switch over to Linux. While I've used it for a long time on my server, that is a very different
+			side of Linux than Desktop Linux. Still, that experience has made switching a far more comfortable experience than
+			it might otherwise have been. In addition, I have switched several other computers to Linux before, though they are
+			being used by people who are decidedly not power-users.
+		</p>
+		<p>
+			While for my sister and mom I decided on Mint and OpenSUSE respectively, for myself I wanted something I was more familiar
+			with configuring and working with. Since my server runs Arch Linux, I have quite a bit of experience working with Arch, and
+			so I wanted my new Desktop OS to be Arch based. Ultimately, I settled on <a href="https://cachyos.org/">CachyOS</a>, a distro
+			that is designed for performance and is built on Arch Linux. It provides optimized packages from their own repos and an
+			optimized kernel for extra performance. It also has an installer, which makes the initial setup way faster, as even though
+			I've done it plenty of times, installing Arch without an installer still takes me a while.
+		</p>
+		<p>
+			Once I had chosen a distro, I had to decide how to partition my disks. While I could have really cut down on what's on my Windows
+			M.2 drive, split the drive, and set up proper dual-booting, that would have been severely reduced available space, risked something
+			happening to the EFI partition and making one of the OSes unbootable, and been annoying to set up. Instead, seeing as my motherboard
+			has 2 M.2 slots, I bought a second drive to put Linux on, and left switching OSes as something to do by manually changing the
+			boot order when I want to change OSes. I'm not planning on going back to Windows very often, so I don't really mind. 
+		</p>
+		<p>
+			After finally installing CachyOS to the new drive, I got to setting it up to my liking. I chose KDE Plasma for the desktop
+			environment, as it provides the best mix of customization and features in my opinion. Next was setting up the command line
+			environment as I like it, with my aliases and tools. Fortunately on that front I could use a script I had previously written
+			to do all that setup for me. It gets <a href="https://fishshell.com/">Fish</a> and <a href="https://starship.rs/">Starship</a>
+			setup to my liking, and all I had to do was install and move over the config for <a href="https://wezterm.org/">WezTerm</a>.
+		</p>
+		<p>
+			So far I hadn't done anything I hadn't done before, between the server, VMs, and WSL installs, I had setup Arch commandlines
+			plenty, and Plasma is pretty straightforward to setup. Next, however, was games. Gaming on Linux has gotten FAR better in
+			the past few years, expecially since the Steam Deck came out and Valve started Proton, their fork of Wine, but most games don't
+			have a native Linux version, and Proton/Wine, while providing functionality for most games, isn't perfect.
+		</p>
+		<p>
+			The first issue I ran into with running games was that they seem to default to using my weak GPU. I have 2 GPUs in my computer, with
+			the relatively beefy NVIDIA card running my main monitor, and an old AMD card running the 2 side monitors. To get games to use
+			the correct GPU, I eventually found that the setting DRI_PRIME to the right card in Launch Options would force the game to use
+			the right card. While it's somewhat annoying to have to set a launch option for every game, I only have to do it once per game.
+		</p>
+		<p>
+			I ran into my next issue when trying to get my HOTAS setup to work with MechWarrior 5. It was constantly seeing all axis as
+			being moved a significant distance from center. This was made worse by the games poor method of changing joystick settings where
+			you alter a text file and restart the game. The only changes that can be done in-game are setting buttons axis. You have to fully
+			restart the game everytime you want to change a deadzone or offset for an axis. I'm not really sure if it's a Linux issue however,
+			as issues with setting up joysticks for MW5 seems to be a pretty universal issue. Additionally, the same setup worked flawlessly
+			in Project Wingman (which also uses Proton), so I think the issue is the game, not the OS or compatability layer.
+		</p>
+		<p>
+			However, as long as I've had Linux on this computer there's been another issue. When the computer wakes from sleep, there is a
+			decent chance that the 2 side monitors, the ones on the old AMD card, will be completely unusable. They show a mess of the right
+			colors all glitchly smeared across the display. I can fix the issue by changing the resolution to something else and then back,
+			so it's not a showstopping issue, but it is quite annoying. So far I can't find any reason for the issue or anyone else with the
+			same issue, and even attempts to just automatically resize the screens every time the computer wakes haven't worked out. I'm
+			kind of at a loss as to where to go from here. I somewhat suspect a driver issue, as it's both monitors on the card, and not the
+			monitor on the other, however I have yet to discover the cause.
+		</p>
+	</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="8/20/2025" />
+		<meta name="categories" content="Web Development,IT,Database" />
+		<meta name="title" content="Warp Chart Database 3" />
+		<meta name="blurb" content="Star System Interface and More" />
+		<style>
+
+		</style>
+	</head>
+	<body>
+		<p>
+			WIP
+			In the time since the previous post, quite a lot of development happened on the site. I have added a downloads page and an interface for adding and viewing
+			star systems as they are outlined in the <i>Stars of Inequity</i> supplement. The star system interface took the vast majority of the time. I was planning on making
+			a few posts on the process, but I got very focused on working on the site. As such this post will look back on the development of the new part of the site.
+		</p>
+		<p>
+			To start with I added the downloads page. It was extremely easy to implement as it's not trying to do anything special because it is follows the aesthetic of
+			being basically a terminal and is all text. The tab provides downloads for the printable documents I've made/modified, the images of the heraldry and map, and
+			a link to the Dynasty information Google doc. In order to allow the downloader to properly see the text in the SVG images, I also added links to the fonts used.
+		</p>
+		<p>
+			The 'Systems' tab came next as a result of my looking at the big text file I had made when generating the capital system of the Valentine dynasty and thinking:
+			"I can probably make something to display this info better". The first thing I had to do was figure out how to store all the data in a retrievable way. Initially
+			I wasn't going to use JSON, as I thought it would make the content un-query-able via SQL. While researching how to create a database with hierarchical
+			information, however, I discovered that PostgreSQL <i>can</i> in fact query stored JSON via
+			<a href="https://www.postgresql.org/docs/17/functions-json.html#FUNCTIONS-SQLJSON-PATH">JSON Functions and Operators</a>. With that knowledge I created a table
+			with an ID column and a JSONb column. Now that the systems were going to be stored as JSON, I needed to make the data's structure in TypeScript, so I 
+			created a TypeScript file with a bunch of nested classes to hold everything.
+		</p>
+		<p>
+			After sorting out how the data was to be stored came creating the method by which systems will be entered into the database. This ended up being the part that gave
+			me the most trouble. While the first bits, system name and stars, were easy as they were top level; the system elements were where the real difficulty was. While the
+			basics of the system elements is just as easy as the stars: a v-for on a component with a few fields, the resources and, potentially, the planet info required far
+			more work. These fields both hold arrays of objects, and needed modals for the entering of their data. The modals needed to be placed above everything but the filter
+			and nav-bar and so are within Vue's Teleport tag, which places the contained elements somewhere else, while allowing the source component's script to work as normal.
+			Just one level of modals was not enough, though. A system element that is a planet can have orbital features such as moons which are functionally planets themselves.
+			Fortunately, a new Teleport element will be placed after (and therefor above) previous ones. 
+		</p>
+		<p>
+			Even though the system sounds simple enough, it took quite a lot of work to get it working. One of the early challenges was keeping a single object that held up-to-date
+			info on all fields through many nested components. Fortunately, Vue provides the ability to do so quite simply via the modal system. Modals allowed me to pass an object
+			to a component, and have that object updated with any changes made to it in the component to which it was passed. In practice, this means that there is functionally only
+			one StarSystem object, at the top level component, that is basically referenced down the chain, keeping every component up to date.
+		</p>
+		<p>
+			The display was more simple, just requiring nested v-for lists with normal props. There was some issues with readability however, which were (mostly) solved by adding
+			the ability for many component to "fold". In order to switch between viewing and editing the selected system, I placed a switch at the top of the page. Due to both modes
+			using the same StarSystem variable, any changes made in edit mode are immediately visible in show mode.
+		</p>
+	</body>
+</html>

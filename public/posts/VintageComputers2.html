@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta name="date" content="10/20/2025" />
+        <meta name="categories" content="Hardware, Vintage Computers" />
+        <meta name="title" content="Recapping a Dell Dimension 4700" />
+        <meta
+            name="blurb"
+            content="Replacing bad capacitors on an old Dell I has sitting around"
+        />
+        <style></style>
+    </head>
+    <body>
+        <p>
+            After getting the Aptiva working, I felt the desire to do more with
+            old computers. Looking around, I saw an old Dell tower that I was
+            basically using as a bucket of old computer parts (I know it's not
+            great to do that, but most of these weren't expected to ever be used
+            again). I took a closer look at it and discovered that there were a
+            few bulging capacitors, which wasn't too suprising, seeing as this
+            computer is ~20 years old. At firse I thought that these capacitors
+            were
+            <a href="https://en.m.wikipedia.org/wiki/Capacitor_plague"
+                >plagued</a
+            >, but after further research the computer came out just after the
+            main years of the plague, so I'm not certain either way. Regardless,
+            the solution remains the same: replace all the types of capacitors
+            that have failed.
+        </p>
+        <p>
+            The process for recapping a motherboard is simple, first record
+            where all the capacitors are and what they are. Fortunately Dell has
+            identifiers for each capacitor silkscreened onto the board so I can
+            just record that along with the capacitance and voltage. Next step
+            is to find all the capacitors to be replaced. While I think you
+            technically should replace all of the capacitors on the board, I
+            decided to just go with the ones that had failed and ones that were
+            of reportedly bad series.
+        </p>
+        <p>
+            After identifying the capacitors I wanted to replace I went to
+            DigiKey to buy their replacements. I just found capacitors that were
+            the same size, same voltage, same capacitance, and the best lifetime
+            at at least the same temperature and ordered them. In order to do
+            work on the motherboard, my current absolute bare-minimum soldering
+            iron wouldn't do, so I also purchaced a slightly better than minumum
+            soldering iron as well as a solder sucker. The new iron supported
+            setting a temperature and had several interchangable tips, including
+            a smaller one, which I needed to accurately desolder and solder the
+            close together components on the motherboard more easily.
+        </p>
+        <p>
+            Once the new iron arrived, I set about desoldering all the replaced
+            capacitors. While most went smoothly, some of the larger ones had
+            massive areas of copper surrounding the hole, I think, which make
+            heating the solder incredibly difficult. Ultimately, those solder I
+            never really managed to fully get all of the solder out of the holes
+            and just had to deal with that later.
+        </p>
+        <p>
+            With the old components out of the board, and the new capacitors
+            ready to go in, I sat down to finish up the board. Similarly to when
+            desoldering, most of the capacitors got soldered in without issue,
+            but the large ones were hard to heat sufficiently and they still had
+            solder clogging the hole. In order to get them in I just had to
+            crank the iron very hot and melt the solder as I inserted the
+            component. It didn't work well, but it did work, so despite the
+            joints being quite poor, the capacitors were in place.
+        </p>
+        <p>
+            It was then time to actually test the board. I got the monitor and
+            keyboard hooked up plugged it in and turned it on and it started
+            giving a beep code. It did power on and nothing popped, so mostly a
+            success for the recap it seemed. I looked up what the code meant,
+            and it turned out to be an issue with memory. I had replaced a
+            capacitor nearby the DIMM slots, so I was worried that something
+            went wrong with that. I tried removing some memory to see if it was
+            the memory that was bad, and the computer POSTed without issue.
+            Relieved that I hadn't screwed anything up, I took the computer and
+            set it up fully with what I believe is its original HDD. Just to
+            make sure that the memory I had removed was really bad, I placed it
+            back in and powered on and the computer POSTed just fine, so it
+            apparently just needed to be re-seated or something.
+        </p>
+        <p>
+            Now that all the hardware was working, I wanted to get Windows XP
+            back onto the computer, as that is what it would have shipped with.
+            In fact it still had the XP badge and certificate of authenticity
+            with the key for XP Home on it. Installation went smoothly, with me
+            burning the XP Home installer onto a CD and then booting it. After
+            installation I needed to find the necessary drivers for everything.
+            Fortunately Dell still has all of the drivers and updates to drivers
+            still available on their website, so I just downloaded all of them,
+            stuck them on a flash drive and installed the ones that were needed
+            for the Dell Dimension 4700. In addition to drivers, I upgraded
+            Windows XP up to Service Pack 3.
+        </p>
+    </body>
+</html>

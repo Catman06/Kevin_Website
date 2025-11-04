@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="5/28/2025" />
+		<meta name="categories" content="Web Development" />
+		<meta name="title" content="Making A New Website 7" />
+		<meta name="blurb" content="Animating post previews" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			After making the posts transition, I wanted to make the post previews do the same. I had to use a TransitionGroup component as the post previews are
+			a v-for directive. TransitionGroups are used for applying transitions to all members of a v-for so I couldn't just move the whole group at once, but
+			the the only real difference in implementation between the previews and the post was how far the previews needed to be set to move. Due to the previews
+			all moving to the same point, rather than staying in position relative to one another, the previews were set to leave the screen just enough to hide
+			them. If the previews were set to leave to a point too far offscreen, the previews would move too fast, if the point is too close, the preview would
+			disappear onscreen.
+		</p>
+		<p>
+			With transitions set up, I felt that the website was basically functional and decided to set this as version 1.0.0. We'll see how good I am at
+			incrementing the version as I add and change things. I will try to vaguely follow semantic versioning practices as much as makes sense for a website
+			as opposed to a library. The reason I decided to use versioning at all was simply because I wanted something to fill in the 'version' field in
+			package.json, so no great cause for alarm if I don't keep it updated.
+		</p>
+	</body>
+</html>

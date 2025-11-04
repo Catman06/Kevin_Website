@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="7/21/2025" />
+		<meta name="categories" content="Web Development,IT" />
+		<meta name="title" content="Improving the Blog" />
+		<meta name="blurb" content="Improving how the blog gets posts" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			I'm finally getting around to doing something that I have been meaning to do for a while now: fixing the method by which posts are gotten for the blog.
+			Currently, when the page loads every post is downloaded from the server and placed into Session Storage. This is slow and wildly inefficient, as all
+			posts are retrieved instead of just the ones being viewed. Additionally, the download happens even if just the post list is being displayed. So to
+			improve load times and reduce how much data has to be sent from the server, I am changing how the blog gets it's posts.
+		</p>
+		<p>
+			First off, I'm separating getting the post's main content from the stuff shown in the previews by adding a PHP file for getting just the meta fields of
+			a	post. I was initially going to just retrieve the meta info from all posts, but in order to facilitate future improvements to the post preview, namely
+			adding paging, I want to be able to retrieve each post's info independently.
+		</p>
+		<p>
+			For caching the fetch requests, I was initially going to use (and partially implemented) a service worker; Then I realized that it would be far easier
+			and more effective to just let the browser handle caching. Now, everything is gotten via fetches every time, which is far simpler than before and
+			allows for each post's data to be downloaded separately rather than all the posts being downloaded at the same time when the page loads. That means that
+			the website should start displaying post previews far faster than before.
+		</p>
+	</body>
+</html>

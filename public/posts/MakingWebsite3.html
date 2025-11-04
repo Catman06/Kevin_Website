@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="5/24/2025" />
+		<meta name="categories" content="Web Development" />
+		<meta name="title" content="Making A New Website 3" />
+		<meta name="blurb" content="Adventures in post storage, post sorting, and preview batching" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			After adding some CORS headers to allow my development server to run getPosts.php, that is all working, allowing me to continue work on the site itself.
+			I have realized that it's not great to have to re-download all of the posts everytime you change pages, so today I focused on caching the posts in Session
+			Storage. I chose session storage over Cache Storage because it will clear itself when the session ends, meaning that anytime you newly open the page it will
+			get the newest posts. Using Session Storage itself is easy, it takes string key - value pairs and has nice getItem and setItem methods. The place where I ran
+			into problems was in (de)serializing Posts.
+		</p>
+		<p>
+			Most fields in a Post object will work automatically when passed to JSON.stringify, however the DocumentFragment would serialize into an empty object. To
+			serialize that I used JSON.stringify's replacer parameter, it allows for you to replace specific fields in the object being serialized with a number, string, bool,
+			or null. In my case I was able to take the DocumentFragment, run it through a XMLSerializer and voila, a string version of the post's content. To deserialize the
+			content I could have used JSON.parse's reviver parameter, which is the reverse of the replacer one on stringify, but it was easier to just leave it as a string and
+			parse it in the same way as when parsing the hmtl file to begin with.
+		</p>
+		<p>
+			Now that posts were being loaded from Session Storage, I split the function that did both the downloads and loading of posts into two, one for each function.
+			The downloadPosts function is most of the old loadPosts, it takes an array of file names, then downloads them, parses them into Post objects, then serializes them
+			and stores them in Session Storage for loadPosts to read from. The function loadPosts now takes one of three strings as an argument, 'load', in which case it will
+			simply load the stored files, 'recheck', in which case it will find any new posts then download and return them, and 'refetch', in which case it will fully re-download
+			all the posts. In addition to when recheck or refetch are	passed,	if it has been too long since the last update, loadPosts will set recheck or refetch itself. Right
+			now, it's set to recheck if it's been more than an hour	and refetch if it's been more than 12. This is needed so that updates will get through even if the session
+			doesn't end for a long time. These only run when loadPosts is run, though, so the page will have to be refreshed or navigated away and back from for the update to happen.
+		</p>
+		<p>
+			Also implemented today was some basic sorting of posts. Now the posts will be sorted newest to oldest simply using Array's sort function with raw time codes.
+			The implementation only allows for sorting by ascending or descending date for now, but it will be easy enough to add other sorts as they become wanted. Also
+			set up were the systems to keep the hash in the url and the post displayed in the blog in sync. When the app is mounted, it tries to change the displayed post
+			the one in the hash. If a new post is selected, the url is changed tp reflect the new post then a hashchange eventListener calls the displayPost function which
+			finds the post with the same url_name as in the url hash and changes selected_post to that post. This somewhat roundabout way of doing things means that the only
+			time something is added to the browser history is when there is an actual change.
+		</p>
+		<p>
+			The final things implemented today had to do with the blogApp's preview. It needed to show a limited amount of previews at a time with a way to view more.
+			To do this I set up batch_size, batch_index, and preview_batch which represent the number of previews on screen, the set of those previews, and the list of posts to
+			preview respectively. batch_size is set based on the width of the window, and is updated by a eventListener listening for window resizes that is throttled to every 100ms.
+			batch_index is a ref that just holds a number, and preview_batch is a computed value, which is a Vue	thing that updates the computed value whenever any ref it uses
+			changes, that is based on batch_size and batch_index.
+		</p>
+	</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="10/18/2025" />
+		<meta name="categories" content="Hardware, Vintage Computers" />
+		<meta name="title" content="Setting up an Aptiva 2159-S7H" />
+		<meta name="blurb" content="Getting an IBM Aptiva 2159-S7H running with period software installed" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			At an estate sale I found an entire IBM Aptiva 2159-S7H setup for just $75 including the CRT monitor, access station (which
+			contains the cd drive and floppy drive), keyboard, mouse and tower, though no HDD. Along with the computer I also bought all
+			the paperwork and cds that the computer originaly came with, which were fortunately also at the estate sale. I brought it
+			home and set it up to find that there were	some issues. This wasn't unexpected, as the computer is ~30 years old, so I was
+			ready to get to work fixing it up.
+		</p>
+		<p>
+			The first issue was that the insides of the computer were shockingly dirty, with what appeared to be dirt splatter on several
+			components in addition to the expected layer of dust. After cleaning everything, I got to troubleshooting issues.
+		</p>
+		<p>
+			Initially, the computer would POST and report several errors. If I tried to get into the BIOS, after 1 or 2 keystrokes, the
+			keyboard would stop working. To get more info on the reported errors I found the service manual online and looked the error
+			codes up. They were seemingly quite disparate and not seemingly connected to any one device. I took another look inside the
+			computer and started troubleshooting by seeing if removing any component would make things work. I found that removing the
+			MWave sound card/modem would make the keyboard consistantly work, though it didn't fix most of the shown by the POST. Despite
+			checking every setting in the BIOS, I couldn't solve any of the errors. I thought that the issue might be that the computer
+			needed the MWave card installed. While the issues seemed unrelated to it, so did the keyboard issue, and removing the card
+			effected that. Working with the idea that there was an issue in the Mwave card, I started looking for a replacement.
+		</p>
+		<p>
+			I found the card I needed on Ebay, and bought it as well as an SD card to IDE converter so I could use an SD card as the
+			hard drive. That would be more reliable and far cheaper than trying to use a period appropriate HDD. When the card and
+			converter arrived I set up the Aptiva again, however, the new card seemed to cause the same issue as the old one, not
+			allowing me to use the keyboard more than a couple of times. However, with an actual drive in the computer, I could now
+			start trying to install Windows 95 and the original software it would have come with, just without sound.
+		</p>
+		<p>
+			Installing Windows 95 is something I have done a few times in VirtualBox, so there were no suprises there, however getting
+			the special recovery disc to work was quite the challenge. Eventually, through trial and error I figured out how to use the
+			recovery disc. Despite it formatting and partitioning the drive, seemingly making it irrelevant what was previously installed,
+			the recovery disc needs to be used over an existing Windows 95 install. With the recovery disc installed, I now had a working
+			Windows 95 computer, right?
+		</p>
+		<p>
+			No. The install was extremely unstable, constantly blue screening with what I believe were memory errors. Clearly something
+			was still very wrong. I tried using the different sound cards again and reseating the memory. Instead of fixing anything,
+			the computer ceased working at all, with POST errors relating to all sorts of things. I checked the service manual and looked
+			up each error to find if there was any common component. The only part that appeared in all of the errors was the motherboard.
+			Surely that's the root issue, right? It explains the wide spread of the errors reported in a way nothing else could easily.
+		</p>
+		<p>
+			So I went back to Ebay to find a replacement for the motherboard. Fortunately I found one, and ordered it; It even came with
+			more memory and a CPU, though a slower one. Once it arrived I swapped everything out and powered it on. And it was glacial.
+			I don't know what is wrong with the board, but even if I switch CPUs the POST process takes several minutes and has graphical
+			glitches. So that was a bust, and I was back to square 1, with no clue what the issue was.
+		</p>
+		<p>
+			At this point I found a section in the service manual that refers to the exact set of errors I was facing. Apparently the real
+			issue was with the Access Station or the card that connects it to the motherboard. Great, I now know more confidently what part
+			is having issues. Unfortunately, I couldn't find anyone selling that component. Unlike the MWave card and motherboard, the access
+			station is specific to this model of Aptiva, which wasn't super common to begin with. The only option would be to buy a whole
+			new Aptiva 2159-S7H and hope that the access station card was the issue and not the access station itself. If the station itself
+			was where the issue lied, I was simply out of luck, as I could find none for sale. Seeing as the only option would cost me ~$300
+			I gave up on being able to fix the Aptiva and put it back together in it's original configuration.
+		</p>
+		<p>
+			I tried to turn it on one more time and it POSTed without errors. I put an SD card into it and installed Windows 95, then installed
+			Windows again via the recovery disc and it all just worked as if there was no issue. Even the sound was working just fine.
+			I have no idea what changed, but I have been installing programs and messing around with it for a while now and it's had no more
+			issues.
+		</p>
+		<p>
+			I've run quite a variety of things on the Aptiva now from games such as Doom, Starcraft, Fallout, and MechWarrior 2; Microsoft Office 97 and
+			WordPerfect 6.0 for productivity software; Cakewalk Professional 3.01 for MIDI composing; Borland C++ 5.02 to try out C++ development; and
+			I even got Vim 6.0 working.
+		</p>
+	</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="6/7/2025" />
+		<meta name="categories" content="Web Development,IT" />
+		<meta name="title" content="Making A New Website 8" />
+		<meta name="blurb" content="Fixing the server & Making the site ready for deployment" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			I initially wasn't going to really deploy this new website on my server, as it wasn't working. Not the server mind you, but the port forwarding
+			to it. I believe the issue was with the Plume Home software used, as when I went to our ISP for support, they temporarily fixed it by rolling back a
+			version. However after some time working, the port forwards once again stopped forwarding and I was back to being without a functional web server.
+			This wasn't much of an issue, as most of the things I do with the server are over LAN, and are therefore unaffected by an issue with port forwarding.
+		</p>
+		<p>
+			Despite it not being my intention, I fixed the problem this morning after trying and failing to SSH into the server. I went to the server physically,
+			and found the issue was with getting a connection to the Wi-Fi. I still don't know exactly what the issue was, but I believe it had to do with the
+			wrong NIC being used and the MAC address of the server having changed due to that. Either way, I was able to fix the problem by unplugging and replugging
+			the USB Wi-Fi dongle. However apparently the server was previously using an old PCIe NIC that I had never removed, so now that the dongle was being used
+			the MAC address was different. This ended up being a blessing in disguise, as after setting up port forwards for the new device (Plume Home recognises
+			devices by MAC address only it seems) port forwarding seems to have started working again. I don't really know why this worked, I had re-applied the port
+			forwarding settings with the old MAC address and it didn't change a thing, but hopefully this fix will stick.
+		</p>
+		<p>
+			With my server now fully functional, I decided to host the new website on it. The first step was figuring out what to do with the old one. I don't want to
+			fully delete it as I did spend a long time making that old site, and there are things that I don't want to fully lose access to. What I decided to do
+			was to move the whole old site into a sub-directory and just change all the links to reflect that. It's not a particularly elegant solution, as it
+			requires quite a bit of manual work to keep the whole old site from breaking, but I can fix problems as they arise. As for the new site, the only change
+			to the site itself is changing where things are being fetched from to be from zipperserver. To deploy the site, I am using npm. It is already a requirement
+			for building Vue and testing via Vite, so it's the natural choice to deploy with. To do this, I just added a new script in the package.json that clears the
+			old version then copies the new one from the location that the site builds to.
+		</p>
+	</body>
+</html>

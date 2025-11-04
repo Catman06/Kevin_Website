@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="date" content="6/27/2025" />
+		<meta name="categories" content="Circuitry,Blacksmithing,C" />
+		<meta name="title" content="Making a Blower Controller" />
+		<meta name="blurb" content="Designing a way to control my forge's blower" />
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<p>
+			While my forge is technically functional, it is far from perfect. It's most glaring issues are the single-speed blower, lack of a hearth, and that I have it mounted basically sideways.
+			Recently, seeing as I want to do more blacksmithing, I have decided to start work fixing some of these issues. I have a lead on a way to get a hearth by going to a scrapyard and buying
+			a plate of thick enough metal, then borrowing some tools from my blacksmithing teacher, Bud Harvey of <a href="https://hotironblacksmith.net/">Hot Iron Blacksmith</a> to cut the piece.
+			Unfortunately the scrapyard is pretty far from me, so I haven't yet gone. Fixing the issue with my blower on the other hand I can do (mostly) from my computer.
+		</p>
+		<p>
+			My current blower is a shop-vac that I can hook into my firepot and am controlling via a foot switch. This mostly works, giving me the ability to blow or not easily, but lacks a way to
+			blow at different speeds which would be helpful especially for keeping the fire at forge welding temperatures. My intended solution is fairly simple on paper, just apply pulse width
+			modulation to the incoming power. The issues start with the fact that the motor in use appears to be an AC motor, meaning the "correct" way to control it is by changing the frequency
+			of the AC going into it. However the components to do so are quite expensive, and largely overkill for what I'm doing. Instead I am going to just extend the time frame of the pulses to
+			be longer than the frequency of the AC current being controlled. Seeing as I'm controlling a fan, I can probably get away with only several pulses a second without much issue because
+			of the fan's inertia.
+		</p>
+		<p>
+			In order to control the mains electricity going to the fan there are two main hurdles. One is that the actual component that is switching the AC power needs to be able to operate without
+			wear. If a normal relay is used it would go though it's lifespan pretty quickly because of how many times it would be switching. The solution is to use a component called a TRIAC, which
+			is functionally a solid-state switch specifically for AC circuits. The second hurdle is that the Raspberry Pi needs to be isolated from the mains voltage, which would immediately fry it.
+			To isolate the low voltage circuit I'm going to use an optocoupler, which uses an LED and photo-transistor to control a larger voltage with a smaller one. I don't fully understand why not
+			to use just the optocoupler, but all the examples I've seen use both, so that's what I'm going to do.
+		</p>
+		<img src="/posts/assets/BlowerCircuitSchematic.png" alt="Circuit Schematic">
+		<p>
+			On the software side, it's a fairly simple setup. I just had to write some C code that uses the input from a potentiometer attached to the Pico's built	in Analog-Digital Converter to control
+			how long to wait before powering the pin that connects to the optocoupler. That was pretty simple given the Pico's extensive documentation and SDK, though I haven't been able to test it yet,
+			as the physical components have not yet arrived. We'll see how things go when I get the circuit assembled.
+		</p>
+	</body>
+</html>
