@@ -1,7 +1,7 @@
 import type { Ref } from "vue";
 
 // Set the base of the URL for PHP scripts
-const baseURL = import.meta.env.DEV ? "https://kevinserver" : "https://zipperserver.duckdns.org";
+const baseURL = import.meta.env.DEV ? "https://kevinserver" : "http://kevinkamasaki.com";
 
 export class MinPost {
 	url_name: string;
@@ -96,7 +96,7 @@ export async function getPostContent(url_name: string): Promise<Post> {
 					break;
 				case "blurb":
 					blurb = tag.content;
-					break;			
+					break;
 				default:
 					break;
 			}
@@ -104,7 +104,7 @@ export async function getPostContent(url_name: string): Promise<Post> {
 		// Get the body of the content and put into a DocumentFragment
 		const body = html_doc.body;
 		content.appendChild(body);
-		
+
 		// Get and store style data
 		const style = html_doc.getElementsByTagName("style")[0];
 		stylesheet = style.innerHTML;
@@ -123,11 +123,11 @@ export function sortPosts(posts: Ref<MinPost[]>, sort: string = 'DateDes'): void
 			posts.value.sort((a, b) => { return a.getTimeCode() - b.getTimeCode(); });
 			break;
 		case 'DateDes':
-			posts.value.sort((a, b) => { 
+			posts.value.sort((a, b) => {
 				return b.getTimeCode() - a.getTimeCode();
 			});
 			break;
-	
+
 		default:
 			break;
 	}
@@ -197,7 +197,7 @@ export function sortPosts(posts: Ref<MinPost[]>, sort: string = 'DateDes'): void
 // 		console.error('Error parsing stored files', error);
 // 		sessionStorage.removeItem('LastFetch');
 // 	}
-	
+
 // 	return post_posts;
 // }
 
@@ -260,7 +260,7 @@ export function sortPosts(posts: Ref<MinPost[]>, sort: string = 'DateDes'): void
 // 						break;
 // 					case "blurb":
 // 						blurb = tag.content;
-// 						break;			
+// 						break;
 // 					default:
 // 						break;
 // 				}
