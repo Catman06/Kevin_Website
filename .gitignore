@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+docker_webserver/src
 *.local
 
 # Editor directories and files
@@ -22,4 +23,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
 deploy.sh
+nginx/*.conf

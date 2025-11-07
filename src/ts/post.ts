@@ -3,7 +3,8 @@ import type { Ref } from "vue";
 // Set the base of the URL for PHP scripts
 const baseURL = import.meta.env.DEV
   ? "https://kevinserver"
-  : "https://kevinkamasaki.com";
+  // : "https://kevinkamasaki.com";
+  : "http://74.208.102.129";
 
 export class MinPost {
   url_name: string;

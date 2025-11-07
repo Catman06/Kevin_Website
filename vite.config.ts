@@ -18,6 +18,7 @@ export default defineConfig({
         blog: resolve(__dirname, 'blog.html'),
         resume: resolve(__dirname, 'resume.html')
       }
-    }
+    },
+    outDir: "docker_webserver/src/www/"
   }
 })
