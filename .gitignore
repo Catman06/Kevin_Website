@@ -25,4 +25,4 @@ docker_webserver/src
 *.sw?
 
 deploy.sh
-nginx/*.conf
+**/nginx/*.conf
