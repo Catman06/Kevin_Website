@@ -6,14 +6,14 @@ try {
     $path = "../posts/$filename.html";
     // Get the meta information from the file
     $content = file_get_contents($path);
-    preg_match('/<meta name="date".*content="(.+)".*\/>/im', $content, $date);
+    preg_match("/<meta\s+name\s*=\s*['\"]date['\"].+content\s*=\s*['\"](.+)['\"].*\/>/isU", $content, $date);
     preg_match(
-        '/<meta name="categories".*content="(.+)".*\/>/im',
+        "/<meta\s+name\s*=\s*['\"]categories['\"].+content\s*=\s*['\"](.+)['\"].*\/>/isU",
         $content,
         $categories,
     );
-    preg_match('/<meta name="title".*content="(.+)".*\/>/im', $content, $title);
-    preg_match('/<meta name="blurb".*content="(.+)".*\/>/im', $content, $blurb);
+    preg_match("/<meta\s+name\s*=\s*['\"]title['\"].+content\s*=\s*['\"](.+)['\"].*\/>/isU", $content, $title);
+    preg_match("/<meta\s+name\s*=\s*['\"]blurb['\"].+content\s*=\s*['\"](.+)['\"].*\/>/isU", $content, $blurb);
     // Add all the acquired info fields to the response
     $response += [
         "date" => $date[1] ?? null,
