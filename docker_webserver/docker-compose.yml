@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: postgresql
     image: postgres:15
     shm_size: 128mb
     environment:
@@ -10,22 +11,26 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - srvnet
     restart: unless-stopped
 
   php:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: php83_app
+    container_name: php83
     volumes:
       - ./src/www:/var/www/public
+    networks:
+      - srvnet
+    restart: unless-stopped
     depends_on:
       - db
-    restart: unless-stopped
 
   nginx:
     image: nginx:latest
-    container_name: nginx_app
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
@@ -35,7 +40,14 @@ services:
       - /srv/http/ssl:/ssl
     depends_on:
       - php
+    networks:
+      - srvnet
     restart: unless-stopped
 
 volumes:
   postgres_data:
+
+networks:
+  srvnet:
+    name: srvnet
+    driver: bridge
