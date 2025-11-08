@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta name="date" content="11/7/2025" />
+		<meta name="categories" content="IT,Web Server" />
+		<meta name="title" content="Moving the Site" />
+		<meta name="blurb" content="Migrating this site from self-hosting to a VPS" />
+		<style></style>
+	</head>
+	<body>
+		<p>
+			This move is honestly quite overdue. I've long had issues keeping this
+			site live due to unreliable port forwards via a Plume router and I'm
+			finally actually remedying the problem by moving from self hosting to a
+			hosting provider.
+		</p>
+		<p>
+			Specifically I ended up choosing
+			<a href="https://www.ionos.com/">IONOS</a> as the host largely due to good
+			prices. Initially I purchased their cheapest web hosting plan and a
+			domain, which provided the ability to simply place the files on their
+			server and point the domain at them. This was almost immediately followed
+			with making a subdomain to hold a WordPress site to serve as a staging
+			site for the Peoria Repair Cafe's WIP website.
+		</p>
+		<p>
+			After a few days with that setup, and after having the virtues of a
+			containerized web server extolled to me by Ruben (who I met at the repair
+			cafe, and is heavily involved in the creation of their site), I decided
+			that a Virtual Private Server using Docker containers sounded like much
+			more fun than the web hosting setup I had.
+		</p>
+		<p>
+			After making the decision to migrate again, I bought IONOS's "VPS M" plan
+			as it was the same price as for the web hosting at $8 a month (ignoring
+			the deal on the first year). I chose Debian 12 for the OS because of its
+			stability and because of how many resources there are for doing anything
+			Debian due to Ubuntu. I was planning on heavily using Docker for the
+			server, so I got to work setting up a basic nginx webserver in a Docker
+			Compose file. After going over quite a few guides I had the main site up
+			and running, though without SSL and via the direct IP, as the domain I had
+			bought was still in use by the web hosting site and the staging site.
+		</p>
+		<p>
+			Now that the main part of the site was functional, next was to set up the
+			subdomain for the WordPress staging site. In order to test anything with
+			the subdomain I had to move the domain from pointing to the web hosting
+			directory to the VPS' ip. The process was fairly simple, just replacing
+			some DNS records with a new "A" record. For subnetting, I needed a "CNAME"
+			record to point the subdomain to the same ip, though that took me longer
+			than it should have to figure out.
+		</p>
+		<p>
+			To setup the server to use the subdomain, there were two main tasks: I
+			needed to setup another Docker compose app that would run a WordPress
+			instance then have nginx reverse proxy any traffic to the subdomain to it.
+			Getting the WordPress container set up in its compose app was
+			straightforward thanks to the abundance of guides on setting up just that,
+			setting up the nginx subdomain, on the other hand, had far fewer guides
+			and of those most were about doing it without nginx being in a container.
+			Eventually, I did find a solution. By putting both the nginx and WordPress
+			into the same Docker network and then having nginx use Docker's DNS, I was
+			able to make nginx reverse proxy to WordPress.
+		</p>
+		<p>
+			Next step was to migrate the existing WordPress site to the new location.
+			Since I only had the one domain, I couldn't easily have both instances
+			available at the same time. This meant that I had to manually move all the
+			data over. For the database, it was managed via the web hosting interface,
+			so I was able to export the whole thing as a single sql file. The files
+			were just in the web hosting server normally, so I was able to download
+			them via SFTP, though it took forever due to there being over 10,000
+			individual files. Now that I had all parts of the WordPress site, I
+			uploaded them to the VPS (The files I put into a tarball first to
+			massively speed up the transfer) and began figuring out how to properly
+			import them.
+		</p>
+		<p>
+			The files were simple, I just unpacked them and pointed the WordPress
+			container at them. The database was a bit more complicated as I opened a
+			shell into the WordPress database container, and then imported the sql
+			file from there. I'm very glad I had KDE Plasma for this part, as I was
+			able to use the clipboard to hold the strings for the user, the database,
+			and the password at the same time.
+		</p>
+		<p>
+			Once I had moved everything over and restarted the containers I was able
+			to access the WordPress site. Just one issue though, all the images were
+			missing. After a bit of looking through the files, I realized that I had
+			entered the wrong path in the WordPress compose file, and when I fixed
+			that, it stopped being able to connect to the database. After some more
+			looking through files, I realized that it was because WordPress was no
+			longer using all the Docker set variables for where to find the database
+			and log in. By deleting and regenerating the WordPress config file, I was
+			able to make the site fully functional.
+		</p>
+		<p>
+			Despite all the issues I faced properly working with Docker for the first
+			time, I really like it and feel I better understand all the hype around
+			containerization. Most of the problems I had weren't with Docker, but were
+			from my lack of knowledge on it.
+		</p>
+	</body>
+</html>
