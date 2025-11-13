@@ -23,6 +23,3 @@ docker_webserver/src
 *.njsproj
 *.sln
 *.sw?
-
-deploy.sh
-**/nginx/*.conf

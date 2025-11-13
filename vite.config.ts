@@ -19,6 +19,5 @@ export default defineConfig({
         resume: resolve(__dirname, 'resume.html')
       }
     },
-    outDir: "docker_webserver/src/www/"
   }
 })
